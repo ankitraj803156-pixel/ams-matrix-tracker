@@ -1,0 +1,2312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AmsEngine — Ankit raj</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #030712;
+    --surface: #0b1329;
+    --card: #111c44;
+    --border: #1e295d;
+    --accent: #00f0ff;
+    --accent2: #8b5cf6;
+    --accent3: #10b981;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --text: #f3f4f6;
+    --muted: #64748b;
+    --font: 'Space Grotesk', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { 
+    background: var(--bg); 
+    color: var(--text); 
+    font-family: var(--font); 
+    min-height: 100vh; 
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  #emoji-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  body::before {
+    content:''; position:fixed; inset:0; z-index:0;
+    background-image: linear-gradient(rgba(0,240,255,0.02) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0,240,255,0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events:none;
+  }
+
+  /* ── INTERNAL BOX MARQUEE TICKER ── */
+  .box-ticker-container {
+    background: rgba(3, 7, 18, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 6px 0;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 480px;
+  }
+  .box-ticker-wrapper {
+    display: inline-block;
+    padding-left: 100%;
+    animation: boxMarqueeSpeed 15s linear infinite;
+  }
+  .box-ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 35px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .box-ticker-item span.glow-txt {
+    color: var(--accent);
+    text-shadow: 0 0 6px rgba(0,240,255,0.7);
+  }
+
+  /* ── FEATURES MATRIX HUB LAYOUT ── */
+  .features-grid-hub {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 14px;
+  }
+  .feature-node-card {
+    background: rgba(11, 19, 41, 0.6);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    transition: all 0.25s ease;
+  }
+  .feature-node-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 240, 255, 0.08);
+  }
+  .feature-icon-wrapper {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .feature-title-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .feature-desc-text {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--mono);
+    line-height: 1.5;
+  }
+
+  /* ── LOGIN ── */
+  #login-screen {
+    position:fixed; inset:0; z-index:100;
+    display:flex; align-items:center; justify-content:center;
+    background: radial-gradient(circle at 50% 30%, rgba(0,240,255,0.1) 0%, var(--bg) 80%);
+    overflow-y: auto;
+    padding: 20px;
+  }
+  .login-box {
+    background: rgba(17,28,68,0.85); border: 2px solid var(--border);
+    backdrop-filter: blur(16px);
+    border-radius:24px; padding:32px 40px; width:480px;
+    box-shadow: 0 20px 50px rgba(0,240,255,0.1);
+    animation: fadeUp .5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .login-logo { text-align:center; margin-bottom: 24px; }
+  .login-logo .badge {
+    display:inline-block; background:linear-gradient(135deg, var(--accent2), #ec4899);
+    border-radius:30px; padding:6px 16px; font-size:11px; font-weight:700;
+    letter-spacing:2px; color:#fff; margin-bottom:16px;
+    box-shadow: 0 4px 12px rgba(139,92,246,0.3);
+  }
+  .login-logo h1 { font-size:32px; font-weight:800; letter-spacing:-1px; }
+  .login-logo p  { color:var(--muted); font-size:13px; margin-top:6px; font-family:var(--mono); }
+  .role-grid { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; margin-bottom:20px; }
+  .role-btn {
+    background:var(--surface); border:2px solid var(--border);
+    border-radius:16px; padding:12px 4px; text-align:center;
+    cursor:pointer; transition:all .25s ease; font-family:var(--font);
+  }
+  .role-btn:hover,.role-btn.active { 
+    border-color:var(--accent); background:rgba(0,240,255,0.08);
+    transform:translateY(-2px); box-shadow:0 6px 15px rgba(0,240,255,0.15);
+  }
+  .role-btn .icon { font-size:20px; margin-bottom:4px; }
+  .role-btn span  { font-size:10px; font-weight:700; letter-spacing:0.5px; color:var(--text); display:block; }
+  
+  .guest-sub-panel { background: rgba(3, 7, 18, 0.4); border: 1px dashed var(--border); padding: 14px; border-radius: 12px; margin-bottom: 16px; }
+  .guest-switch-label { font-size: 11px; font-family: var(--mono); color: var(--accent); font-weight: 700; margin-bottom: 8px; display: block; text-transform: uppercase; text-align: center; }
+  .guest-switch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .guest-opt-btn { background: var(--surface); border: 1px solid var(--border); padding: 8px; font-size: 11px; font-weight: 700; color: var(--text); border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.2s; }
+  .guest-opt-btn.active { border-color: var(--accent2); background: rgba(139,92,246,0.15); color: var(--text); }
+
+  .login-input {
+    width:100%; background:var(--surface); border:2px solid var(--border);
+    border-radius:12px; padding:14px 16px; color:var(--text); font-family:var(--mono);
+    font-size:14px; margin-bottom:14px; outline:none; transition:all .2s;
+  }
+  .login-input:focus { border-color:var(--accent); box-shadow:0 0 10px rgba(0,240,255,0.2); }
+  
+  .gender-select-wrap { display: flex; gap: 12px; margin-bottom: 14px; align-items: center; }
+  .gender-label { font-size: 11px; font-weight: 700; color: var(--muted); font-family: var(--mono); text-transform: uppercase; }
+  .gender-btn-group { display: flex; gap: 8px; flex: 1; }
+  .gender-opt { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 12px; color: var(--text); text-align: center; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+  .gender-opt.active { border-color: var(--accent3); background: rgba(16,185,129,0.1); }
+
+  .login-btn {
+    width:100%; background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border:none; border-radius:12px; padding:16px; color:#fff;
+    font-family:var(--font); font-size:16px; font-weight:700;
+    cursor:pointer; letter-spacing:1px; transition:all .2s; margin-bottom: 14px;
+  }
+  .login-btn:hover { opacity:.9; transform:scale(1.01); }
+
+  #demo-text { text-align:center;font-size:11px;color:var(--muted);margin-bottom:20px;font-family:var(--mono); }
+
+  /* ── APP SHELL ── */
+  #app { display:none; position:relative; z-index:1; }
+  .topbar {
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    background:rgba(3,7,18,0.85); backdrop-filter:blur(20px);
+    border-bottom:2px solid var(--border);
+    display:flex; align-items:center; gap:16px; padding:0 32px; height:70px;
+  }
+  .topbar-logo { font-weight:800; font-size:24px; letter-spacing:-0.5px; display:flex; align-items:center; gap:6px; }
+  .topbar-logo span { color:var(--accent); }
+  .signature-badge { font-family:var(--mono); font-size:10px; background:rgba(0,240,255,0.07); border:1px solid var(--accent); padding:2px 8px; border-radius:6px; color:var(--accent); font-weight:bold; letter-spacing:1px; margin-left:4px; }
+  .topbar-badge { font-family:var(--mono); font-size:11px; background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:4px 12px; color:var(--accent2); font-weight:700; }
+  .topbar-user { margin-left:auto; display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:8px 16px; }
+  .topbar-user .avatar { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,var(--accent),var(--accent2)); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; color:#fff; }
+  .topbar-user span { font-size:14px; font-weight:600; }
+  .logout-btn { background:rgba(239,68,68,0.1); border:1px solid var(--danger); border-radius:8px; padding:6px 14px; color:var(--danger); font-size:12px; cursor:pointer; font-family:var(--mono); font-weight:600; transition:all .2s; }
+  .logout-btn:hover { background:var(--danger); color:#fff; }
+
+  .sidebar { position:fixed; top:70px; left:0; bottom:0; width:250px; background:var(--surface); border-right:2px solid var(--border); padding:20px 16px; overflow-y:auto; display:flex; flex-direction:column; justify-content:space-between; }
+  .sidebar-content { flex: 1; }
+  .nav-section { font-size:11px; font-weight:700; letter-spacing:2px; color:var(--muted); padding:12px 12px 6px; text-transform:uppercase; }
+  .nav-item { display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:12px; cursor:pointer; font-size:14px; font-weight:600; transition:all .2s; color:var(--text); margin-bottom:4px; }
+  .nav-item:hover { background:rgba(255,255,255,0.05); }
+  .nav-item.active { background:rgba(0,240,255,0.1); color:var(--accent); border:1px solid rgba(0,240,255,0.25); }
+  
+  /* ── SIDEBAR FOOTER & CONTACT ── */
+  .sidebar-footer { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 14px; border-top: 1px dashed var(--border); text-align: center; }
+  .sidebar-footer span { color: var(--accent); font-weight: bold; }
+  .contact-panel-box {
+    margin-top: 12px; background: rgba(3,7,18,0.5); border: 1px solid var(--border);
+    border-radius: 10px; padding: 10px; font-family: var(--mono); font-size: 10px; text-align: left;
+  }
+  .contact-title-lbl { font-weight: 800; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .contact-link-row { color: var(--text); text-decoration: none; display: block; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .contact-link-row:hover { color: var(--accent); }
+
+  .main { margin-left:250px; margin-top:70px; padding:40px; min-height:calc(100vh - 70px); }
+  .card { background:rgba(17,28,68,0.7); border:2px solid var(--border); backdrop-filter:blur(10px); border-radius:20px; padding:28px; margin-bottom:24px; box-shadow:0 10px 30px rgba(0,0,0,0.2); }
+  .section-title { font-size:26px; font-weight:800; margin-bottom:6px; letter-spacing:-0.5px; }
+  .section-sub { color:var(--muted); font-size:14px; font-family:var(--mono); }
+
+  /* ── EMOJI STATS BOARD ── */
+  .emoji-visual-strip {
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+    border: 2px solid var(--accent);
+    border-radius: 20px; padding: 24px 28px; margin-bottom: 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 25px rgba(0,240,255,0.15);
+  }
+  .emoji-visual-left { display: flex; align-items: center; gap: 20px; flex: 1; }
+  .emoji-visual-display { font-size: 46px; text-shadow: 0 0 20px rgba(0,240,255,0.6); animation: pulseEmoji 2.5s infinite alternate; }
+  .emoji-visual-text { flex: 1; }
+  .emoji-visual-text h4 { font-size: 18px; font-weight: 800; color: var(--text); letter-spacing: 0.5px; }
+  .emoji-visual-text p { font-size: 12px; font-family: var(--mono); color: var(--accent); margin-top: 4px; display: flex; align-items: center; gap: 6px; }
+  .emoji-visual-trackers { display: flex; gap: 16px; margin-left: 15px; }
+  .emoji-node-stat { text-align: center; background: rgba(3,7,18,0.6); padding: 10px 18px; border-radius: 14px; border: 1px solid var(--border); min-width: 110px; }
+  .emoji-node-icon { font-size: 22px; margin-bottom: 4px; }
+  .emoji-node-lbl { font-size: 10px; font-family: var(--mono); color: var(--text); font-weight: 600; }
+
+  /* ── SORT SWITCH BUTTONS ── */
+  .sort-control-container { display: flex; align-items: center; background: var(--surface); border: 2px solid var(--border); padding: 4px; border-radius: 12px; gap: 4px; }
+  .sort-toggle-btn { background: transparent; border: none; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--muted); padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
+  .sort-toggle-btn.active { background: var(--card); border: 1px solid var(--border); color: var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+  /* ── STREAK BANNER ── */
+  .streak-banner-wrap { background: rgba(17,28,68,0.7); border: 2px solid var(--border); backdrop-filter: blur(10px); border-radius: 20px; padding: 22px 28px; margin-bottom: 24px; }
+  .streak-banner-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .streak-banner-header h3 { font-size: 17px; font-weight: 800; }
+  .streak-top3-badge { background: rgba(0,240,255,0.1); border: 1px solid rgba(0,240,255,0.3); border-radius: 20px; padding: 3px 10px; font-size: 10px; font-family: var(--mono); font-weight: 700; color: var(--accent); letter-spacing: 1px; }
+  .streak-cards-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .streak-card { background: rgba(11,19,41,0.8); border: 1.5px solid var(--border); border-radius: 14px; padding: 16px 18px; display: flex; align-items: center; gap: 14px; transition: all 0.2s; }
+  .streak-card.rank-1 { border-color: #f59e0b; background: linear-gradient(135deg, rgba(245,158,11,0.07), rgba(11,19,41,0.9)); box-shadow: 0 0 18px rgba(245,158,11,0.12); }
+  .streak-card.rank-2 { border-color: #9ca3af; background: linear-gradient(135deg, rgba(156,163,175,0.06), rgba(11,19,41,0.9)); }
+  .streak-card.rank-3 { border-color: #b45309; background: linear-gradient(135deg, rgba(180,83,9,0.06), rgba(11,19,41,0.9)); }
+  .streak-rank-circle { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 900; flex-shrink: 0; font-family: var(--mono); }
+  .rank-1 .streak-rank-circle { background: rgba(245,158,11,0.2); color: #f59e0b; }
+  .rank-2 .streak-rank-circle { background: rgba(156,163,175,0.15); color: #9ca3af; }
+  .rank-3 .streak-rank-circle { background: rgba(180,83,9,0.15); color: #b45309; }
+  .streak-card-info { flex: 1; }
+  .streak-card-name { font-weight: 800; font-size: 14px; color: var(--text); }
+  .streak-card-roll { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-top: 2px; }
+  .streak-card-days { display: flex; align-items: center; gap: 5px; font-family: var(--mono); font-weight: 800; font-size: 15px; color: #ff4500; text-shadow: 0 0 10px rgba(255,69,0,0.35); }
+
+  /* ── SUBJECT STATS 2-COL ── */
+  .subject-stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
+  .subject-stat-mini-card { background: rgba(11,19,41,0.8); border: 2px solid var(--border); padding: 18px; border-radius: 16px; display: flex; flex-direction: column; gap: 10px; transition: all 0.25s ease; }
+  .subject-stat-mini-card:hover { border-color: rgba(0,240,255,0.25); }
+  .card-top-row { display:flex; justify-content:space-between; align-items:flex-start; width:100%; }
+  .subject-stat-title { font-size: 14px; font-weight: 700; color: var(--text); max-width: 60%; line-height: 1.4; }
+  .subject-stat-metrics { font-family: var(--mono); font-size: 18px; font-weight: 800; text-align: right; line-height: 1.3; }
+
+  /* ── PREDICTOR BOX ── */
+  .subject-prediction-box { background: rgba(3,7,18,0.5); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-family: var(--mono); }
+  .sub-pred-node { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .sub-pred-value { font-size: 14px; font-weight: 800; }
+  .sub-pred-label { font-size: 9px; font-weight: 700; letter-spacing: 0.8px; color: var(--muted); text-transform: uppercase; }
+
+  /* ── TRACKER ROWS ── */
+  .class-row-tracker { background:var(--surface); border:2px solid var(--border); padding:18px; border-radius:16px; margin-bottom:14px; transition:border .2s; position:relative; }
+  .class-row-tracker:hover { border-color:var(--accent2); }
+  .tracker-title { font-weight:700; font-size:15px; color:var(--text); margin-bottom:10px; }
+  .radio-options { display:flex; gap:20px; font-size:13px; font-family:var(--mono); flex-wrap:wrap; }
+  .radio-options label { display:flex; align-items:center; gap:8px; cursor:pointer; color:var(--text); padding:6px 12px; background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:8px; transition:all 0.2s; }
+  .radio-options label:hover { border-color:var(--accent); background:rgba(0,240,255,0.02); }
+  .radio-options input[type="radio"] { accent-color:var(--accent); width:16px; height:16px; cursor:pointer; }
+  .official-tracker-badge { position:absolute; top:18px; right:20px; font-family:var(--mono); font-size:11px; padding:4px 10px; border-radius:6px; font-weight:bold; text-transform:uppercase; border:1px solid transparent; }
+
+  /* ── INLINE EDITOR ── */
+  .inline-card-editor { background:rgba(3,7,18,0.5); border-top:2px dashed var(--border); padding-top:14px; display:flex; flex-direction:column; gap:10px; width:100%; }
+  .inline-input-group { display:flex; align-items:center; gap:12px; justify-content:space-between; }
+  .inline-input-group label { font-size:12px; font-family:var(--mono); color:var(--muted); }
+  .inline-input-group input { width:85px; padding:8px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-family:var(--mono); text-align:center; font-size:13px; outline:none; }
+  .inline-input-group input:focus { border-color:var(--accent); }
+
+  /* ── ACTION BUTTONS ── */
+  .btn-action-green { background: rgba(16,185,129,0.2); border: 1px solid var(--accent3); color: var(--accent3); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-family: var(--mono); font-weight: 700; transition: all 0.2s; }
+  .btn-action-green:hover { background: var(--accent3); color: #fff; }
+  .btn-action-red { background: rgba(239,68,68,0.2); border: 1px solid var(--danger); color: var(--danger); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-family: var(--mono); font-weight: 700; transition: all 0.2s; }
+  .btn-action-red:hover { background: var(--danger); color: #fff; }
+
+  /* ── HISTORY LOG ── */
+  .history-item-row { background:var(--surface); border-bottom:2px solid var(--border); padding:14px 20px; display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+  .history-date { font-family:var(--mono); font-size:14px; font-weight:700; color:var(--accent); white-space:nowrap; }
+  .history-subjects-list { display:flex; flex-direction:column; gap:6px; flex:1; }
+  .history-subject-tag { display:flex; justify-content:space-between; font-size:13px; background:rgba(255,255,255,0.03); padding:6px 12px; border-radius:8px; border:1px solid var(--border); }
+
+  /* ── TABLE ── */
+  .data-table { width:100%; border-collapse:collapse; table-layout:fixed; }
+  .data-table th { text-align:left; font-size:11px; font-weight:700; letter-spacing:1.5px; color:var(--muted); padding:16px; border-bottom:2px solid var(--border); font-family:var(--mono); text-transform:uppercase; }
+  .data-table td { padding:16px; font-size:14px; border-bottom:1px solid var(--border); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .data-table tr:hover td { background:rgba(0,240,255,0.02); }
+  .pill { display:inline-block; padding:4px 10px; border-radius:30px; font-size:10px; font-weight:700; font-family:var(--mono); text-transform:uppercase; text-align:center; }
+  .pill-green   { background:rgba(16,185,129,0.15); color:#10b981; border:1px solid rgba(16,185,129,0.3); }
+  .pill-blue     { background:rgba(0,240,255,0.15);  color:#00f0ff; border:1px solid rgba(0,240,255,0.3); }
+  .pill-yellow { background:rgba(245,158,11,0.15); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); }
+  .pill-red     { background:rgba(239,68,68,0.15);  color:#ef4444; border:1px solid rgba(239,68,68,0.3); }
+
+  .sheet-select { background:#0b1329; color:var(--text); border:2px solid var(--border); border-radius:8px; padding:6px; font-family:var(--mono); font-size:12px; outline:none; width:100%; transition:border .2s; }
+  .sheet-select:focus { border-color:var(--accent); }
+  .sheet-select option { background:var(--card); }
+
+  /* ── SECURITY MODAL ── */
+  #gateway-terminal { background:#02050c; border:2px solid var(--border); border-radius:12px; padding:16px; font-family:var(--mono); font-size:12px; color:var(--accent); margin-top:12px; text-align:left; max-height:150px; overflow-y:auto; line-height:1.5; box-shadow:inset 0 0 10px rgba(0,0,0,0.8); }
+  .terminal-log { margin-bottom:6px; }
+
+  /* ── FORMS ── */
+  .form-group { margin-bottom:20px; }
+  .form-label { font-size:11px; font-weight:700; letter-spacing:2px; color:var(--muted); margin-bottom:8px; display:block; text-transform:uppercase; }
+  .form-input,.form-select { width:100%; background:var(--surface); border:2px solid var(--border); border-radius:10px; padding:12px 16px; color:var(--text); font-family:var(--font); font-size:14px; outline:none; transition:border .2s; }
+  .form-input:focus,.form-select:focus { border-color:var(--accent); }
+  .search-bar { background:var(--surface); border:2px solid var(--border); border-radius:10px; padding:10px 16px; color:var(--text); font-family:var(--font); font-size:13px; outline:none; }
+  .search-bar:focus { border-color:var(--accent); }
+  .btn-primary { background:linear-gradient(135deg,var(--accent),var(--accent2)); border:none; border-radius:10px; padding:12px 24px; color:#fff; font-family:var(--font); font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 4px 15px rgba(139,92,246,0.2); transition:all 0.2s; }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(139,92,246,0.3); }
+  .btn-ghost { background:transparent; border:2px solid var(--border); border-radius:10px; padding:12px 24px; color:var(--text); font-family:var(--font); font-size:14px; font-weight:600; cursor:pointer; transition:background .2s; }
+  .btn-ghost:hover { background:rgba(255,255,255,0.05); }
+
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .hidden { display:none !important; }
+  .flex { display:flex; }
+  .items-center { align-items:center; }
+  .justify-between { justify-content:space-between; }
+  .gap-3 { gap:12px; }
+  .table-wrap { overflow-x:auto; border-radius:14px; border:2px solid var(--border); background:var(--card); width:100%; }
+  .highlight-row td { color:var(--accent) !important; font-weight:700; background:rgba(0,240,255,0.03); }
+
+  /* ── ROUTINE ── */
+  .routine-day-box { margin-bottom: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 16px; border-radius: 12px; }
+  .routine-day-title { font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; font-family: var(--mono); }
+
+  /* ── MOBILE NAV TOGGLE (hidden on desktop) ── */
+  .mobile-nav-toggle {
+    display: none;
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--accent);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 39;
+  }
+
+  @keyframes pulseEmoji {
+    0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(0,240,255,0.3)); }
+    100% { transform: scale(1.05); filter: drop-shadow(0 0 15px rgba(0,240,255,0.7)); }
+  }
+  @keyframes boxMarqueeSpeed {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ════════════════════════════════════════════════════════
+     RESPONSIVE / MOBILE LAYOUT
+     Pure CSS adjustments — no feature changes, no logic touched.
+     ════════════════════════════════════════════════════════ */
+
+  /* ── Tablets and small laptops ── */
+  @media (max-width: 1024px) {
+    .main { padding: 28px 20px; }
+    .grid-2 { grid-template-columns: 1fr; gap: 16px; }
+    .subject-stats-container { grid-template-columns: 1fr; }
+    .streak-cards-row { grid-template-columns: 1fr; }
+    .emoji-visual-strip { flex-wrap: wrap; gap: 16px; }
+    .emoji-visual-trackers { margin-left: 0; }
+  }
+
+  /* ── Phones & narrow tablets ── */
+  @media (max-width: 768px) {
+    body { overflow-x: hidden; }
+
+    /* Topbar becomes compact with hamburger */
+    .topbar {
+      padding: 0 14px;
+      gap: 10px;
+      height: 60px;
+    }
+    .mobile-nav-toggle { display: flex; }
+    .topbar-logo { font-size: 18px; gap: 4px; }
+    .topbar-logo .signature-badge { display: none; }
+    .topbar-badge { display: none; }
+    .topbar-user { padding: 6px 10px; gap: 8px; margin-left: auto; }
+    .topbar-user span { font-size: 12px; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .topbar-user .avatar { width: 28px; height: 28px; font-size: 11px; }
+    .logout-btn { padding: 6px 10px; font-size: 11px; }
+
+    /* Sidebar becomes a slide-in drawer */
+    .sidebar {
+      top: 60px;
+      left: 0;
+      width: 78vw;
+      max-width: 280px;
+      transform: translateX(-100%);
+      transition: transform 0.28s ease;
+      z-index: 40;
+      box-shadow: 8px 0 30px rgba(0,0,0,0.4);
+    }
+    .sidebar.mobile-open { transform: translateX(0); }
+    .sidebar-overlay.active { display: block; }
+
+    /* Main fills full width, no left margin */
+    /* Main fills full width, no left margin */
+    .main {
+      margin-left: 0 !important;
+      margin-top: 60px;
+      padding: 16px 14px 40px;
+      width: 100% !important;
+      max-width: 100vw !important;
+      overflow-x: hidden;
+      display: block;
+    }
+
+    .card { padding: 18px; border-radius: 16px; margin-bottom: 16px; width: 100%; }
+    .section-title { font-size: 20px; }
+    .section-sub { font-size: 12px; }
+
+    /* Emoji strip stacks vertically */
+    .emoji-visual-strip { padding: 16px; flex-direction: column; align-items: flex-start; gap: 14px; width: 100%; }
+    .emoji-visual-left { width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+    .emoji-visual-display { font-size: 34px; }
+    .emoji-visual-text h4 { font-size: 15px; }
+    .emoji-visual-trackers { width: 100%; justify-content: space-between; margin-left: 0; display: flex; gap: 10px; }
+    .emoji-node-stat { flex: 1; min-width: 0; }
+    .box-ticker-container { max-width: 100%; width: 100%; }
+
+    .features-grid-hub { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    .feature-node-card { padding: 12px; width: 100%; }
+    .feature-icon-wrapper { font-size: 20px; }
+    .feature-title-text { font-size: 12px; }
+    .feature-desc-text { font-size: 10px; }
+
+    .streak-banner-wrap { padding: 16px; width: 100%; }
+    .streak-banner-header { flex-wrap: wrap; gap: 8px; }
+    .streak-banner-header h3 { font-size: 14px; }
+    .streak-cards-row { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    .streak-card { padding: 12px 14px; width: 100%; }
+
+    .subject-stats-container { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    .subject-stat-mini-card { padding: 14px; width: 100%; }
+    .subject-stat-title { max-width: 100%; font-size: 13px; }
+    .subject-stat-metrics { font-size: 14px; text-align: left !important; margin-top: 4px; }
+    .card-top-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .subject-prediction-box { display: flex; flex-direction: column; gap: 6px; padding: 10px; width: 100%; }
+    .sub-pred-value { font-size: 11px; }
+    .sub-pred-label { font-size: 8px; }
+
+    .grid-2 { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+
+    /* Page headers with flex row that overflow on mobile */
+    #page-attendance > div.flex.items-center.justify-between {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+      width: 100%;
+    }
+    #page-attendance .flex.items-center.gap-3 {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      width: 100%;
+    }
+    #page-attendance .flex.items-center.gap-3 .sort-control-container {
+      justify-content: center;
+      width: 100%;
+    }
+    #page-attendance .flex.items-center.gap-3 input[type="date"],
+    #page-attendance .flex.items-center.gap-3 .search-bar {
+      width: 100% !important;
+    }
+
+    #page-students > div[style*="justify-content:space-between"] {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      width: 100%;
+    }
+    #page-students .search-bar { width: 100% !important; }
+
+    /* Tables: allow horizontal scroll, shrink padding/fonts */
+    .table-wrap { border-radius: 12px; width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+    .data-table th, .data-table td { padding: 10px 12px; font-size: 12px; }
+    .data-table { min-width: 750px; table-layout: auto; width: 100%; }
+    .class-row-tracker { padding: 14px; }
+    .official-tracker-badge { position: static; display: inline-block; margin-top: 10px; }
+    .tracker-title { margin-bottom: 8px; }
+    .radio-options { gap: 10px; }
+    .radio-options label { padding: 6px 10px; font-size: 12px; }
+
+    .history-item-row { padding: 12px 14px; flex-direction: column; gap: 8px; }
+    .history-date { white-space: normal; }
+
+    .inline-input-group { flex-wrap: wrap; gap: 8px; }
+    .inline-input-group input { width: 70px; }
+
+    /* Login screen tightened for small viewports */
+    .login-box { width: 100%; padding: 24px 20px; border-radius: 18px; }
+    .login-logo h1 { font-size: 26px; }
+    .role-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .gender-select-wrap { flex-wrap: wrap; }
+
+    #security-modal .login-box { width: 100%; }
+  }
+
+  /* ── Very small phones ── */
+  @media (max-width: 420px) {
+    .topbar-user span { max-width: 60px; }
+    .features-grid-hub { grid-template-columns: 1fr; }
+    .role-grid { grid-template-columns: 1fr 1fr; }
+    .subject-prediction-box { grid-template-columns: 1fr 1fr; }
+    .data-table { min-width: 560px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="emoji-canvas"></canvas>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="badge">ENGINE DESIGN BY ANKIT</div>
+      <h1>Ams<span style="color:var(--accent)">Engine</span></h1>
+      <p>Dynamic Self-Roster & Configurable Schedule Engine</p>
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px;">SELECT ROLE</div>
+      <div class="role-grid">
+        <div class="role-btn active" onclick="selectRole('student',this)"><div class="icon">🎓</div><span>STUDENT</span></div>
+        <div class="role-btn" onclick="selectRole('cr',this)"><div class="icon">📋</div><span>CR</span></div>
+        <div class="role-btn" onclick="selectRole('teacher',this)"><div class="icon">👨‍🏫</div><span>TEACHER</span></div>
+        <div class="role-btn" onclick="selectRole('guest',this)"><div class="icon">👀</div><span>GUEST</span></div>
+      </div>
+    </div>
+
+    <div id="guest-persona-panel" class="guest-sub-panel hidden">
+      <span class="guest-switch-label">Select Persona View Experience</span>
+      <div class="guest-switch-grid">
+        <div class="guest-opt-btn active" id="guest-view-student" onclick="toggleGuestPersona('student')">As Student View</div>
+        <div class="guest-opt-btn" id="guest-view-cr" onclick="toggleGuestPersona('cr')">As CR/Teacher View</div>
+      </div>
+    </div>
+
+    <input class="login-input" id="login-roll" placeholder="Enter Roll Number (e.g., 25IOT30)" oninput="this.value=this.value.toUpperCase()">
+    <input class="login-input" id="login-reg" placeholder="Enter Registration Number (e.g., 25155126025)" oninput="this.value=this.value.toUpperCase()">
+    <input class="login-input" id="login-name" placeholder="Your Name (Only required for Fresh Signup)">
+    <input type="password" class="login-input" id="login-pin" placeholder="Enter 4-Digit Security PIN" maxlength="4" pattern="\d*">
+    
+    <div class="gender-select-wrap" id="login-gender-box">
+      <span class="gender-label">Gender:</span>
+      <div class="gender-btn-group">
+        <div class="gender-opt active" id="g-male" onclick="setGenderIdentity('M')">Male</div>
+        <div class="gender-opt" id="g-female" onclick="setGenderIdentity('F')">Female</div>
+      </div>
+    </div>
+
+    <button class="login-btn" onclick="doLogin()">ENTER PORTAL →</button>
+    <p id="demo-text">First login? Enter your credentials along with a chosen 4-digit PIN to claim your account.</p>
+  </div>
+</div>
+
+<div id="security-modal" class="hidden" style="position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(3,7,18,0.95);backdrop-filter:blur(12px);">
+  <div class="login-box" style="border-color:var(--accent2);box-shadow:0 0 80px rgba(124,58,237,0.2);width:460px;">
+    <div class="login-logo" style="margin-bottom:12px;">
+      <div class="badge" style="background:var(--danger)">SECURITY GATEWAY</div>
+      <h2 style="font-size:24px;font-weight:800;margin-top:10px;">Verification Portal Matrix</h2>
+    </div>
+    <div id="gateway-terminal"></div>
+    <div style="background:var(--surface);border:2px solid var(--border);padding:12px;border-radius:12px;margin-top:14px;margin-bottom:18px;font-size:12px;color:var(--muted);text-align:center;font-family:var(--mono);">
+      🔐 Cryptographic Administrative Handshake Challenge
+    </div>
+    <div class="form-group">
+     <input type="password" class="login-input" id="secure-passcode" placeholder="ENTER ADMINISTRATIVE KEY" style="text-align:center;font-size:16px;letter-spacing:2px;font-weight:bold;">
+    </div>
+    <div style="display:flex;gap:12px;">
+      <button class="btn-primary" style="flex:1;" onclick="verifyLiveEmailOTP()">AUTHENTICATE</button>
+      <button class="btn-ghost" onclick="cancelSecurityGate()">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <div class="mobile-nav-toggle" id="mobile-nav-toggle" onclick="toggleMobileSidebar()">☰</div>
+    <div class="topbar-logo">Ams<span>Engine</span><div class="signature-badge">⚡ AR SYSTEM</div></div>
+    <div class="topbar-badge" id="topbar-role">STUDENT</div>
+    <div class="topbar-user">
+      <div class="avatar" id="user-avatar">AR</div>
+      <span id="user-display">Ankit Raj</span>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">LOGOUT</button>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-content">
+      <div class="nav-section">OVERVIEW</div>
+      <div class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard',this)">📊 Dashboard</div>
+      <div class="nav-section">ACADEMICS</div>
+      <div class="nav-item" id="sidebar-nav-sheet" onclick="showPage('attendance',this)">✅ Attendance Sheet</div>
+      <div class="nav-item" id="sidebar-nav-tracker" onclick="showPage('tracker',this)">📅 Mark Attendance</div>
+      <div class="nav-item" id="sidebar-nav-routine" onclick="showPage('routine-config',this)">⚙️ Configure Routine</div>
+      <div class="nav-section">ROSTER</div>
+      <div class="nav-item" id="sidebar-nav-students" onclick="showPage('students',this)">👥 Class Directory</div>
+      <div class="nav-item hidden" id="sidebar-nav-admin-settings" onclick="showPage('admin-settings',this)">🛠️ Admin Settings</div>
+    </div>
+    
+    <div class="sidebar-footer">
+      Made with ⚡ by <span>Ankit</span>
+      <div class="contact-panel-box">
+        <div class="contact-title-lbl">📞 Get In Touch</div>
+        <a href="mailto:ankitraj803156@gmail.com" class="contact-link-row">📧 ankitraj803156@gmail.com</a>
+        <a href="tel:+917368985353" class="contact-link-row">📱 +91 7368985353</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <div id="page-dashboard">
+      <div class="emoji-visual-strip">
+        <div class="emoji-visual-left">
+          <div class="emoji-visual-display" id="dash-emoji-avatar">🚀</div>
+          <div class="emoji-visual-text">
+            <h4 id="dash-emoji-title">System Cluster Active: Welcome, ANKIT!</h4>
+            <p id="dash-emoji-subtitle">🛰️ 💎 Pro Scholar Status Core Matrix Node Active 📡</p>
+            
+            <div class="box-ticker-container">
+              <div class="box-ticker-wrapper">
+                <div class="box-ticker-item">🚀 Cluster Node: <span class="glow-txt">Live Sync</span></div>
+                <div class="box-ticker-item">📡 Core Stream: <span class="glow-txt">IoT-2025</span></div>
+                <div class="box-ticker-item">🔒 Auth Layer: <span class="glow-txt">SHA-256 Protected</span></div>
+                <div class="box-ticker-item">⚡ Architecture: <span class="glow-txt">Ankit Raj Systems</span></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="emoji-visual-trackers">
+          <div class="emoji-node-stat"><div class="emoji-node-icon">📊</div><div class="emoji-node-lbl">Dynamic Units</div></div>
+          <div class="emoji-node-stat"><div class="emoji-node-icon">🛡️</div><div class="emoji-node-lbl">Secured Node</div></div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 24px;">
+        <h3 style="font-size:16px; font-weight:800; text-transform: uppercase; letter-spacing: 1px; color: var(--accent2);">⚙️ Core Architecture &amp; System Capabilities</h3>
+        <div class="features-grid-hub">
+          <div class="feature-node-card">
+            <div class="feature-icon-wrapper">🔮</div>
+            <div class="feature-title-text">Predictor Engine</div>
+            <div class="feature-desc-text">Instantly isolates and maps data gaps to outline exactly how many periods must be attended or can be skipped safely.</div>
+          </div>
+          <div class="feature-node-card">
+            <div class="feature-icon-wrapper">👥</div>
+            <div class="feature-title-text">Cross-Ref Register</div>
+            <div class="feature-desc-text">Separates ledger scopes completely. Students view official ledgers, while CR accounts match personal markings beside official rows.</div>
+          </div>
+          <div class="feature-node-card">
+            <div class="feature-icon-wrapper">🔐</div>
+            <div class="feature-title-text">SHA-256 Security</div>
+            <div class="feature-desc-text">Translates user input data blocks directly into dynamic hexadecimal cryptographic hashes. Raw plain-text security keys are never stored.</div>
+          </div>
+          <div class="feature-node-card">
+            <div class="feature-icon-wrapper">⚙️</div>
+            <div class="feature-title-text">Routines Mapping</div>
+            <div class="feature-desc-text">Dynamically configures weekday routine slots across all tracking systems instantly using comma-separated structure engines.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="streak-banner-wrap" id="streak-banner-container">
+        <div class="streak-banner-header">
+          <span style="font-size:20px;">🔥</span>
+          <h3>Active Attendance Streak Leaders</h3>
+          <span class="streak-top3-badge">TOP 3 CONSISTENCIES</span>
+        </div>
+        <div class="streak-cards-row" id="streak-rankings-box"></div>
+      </div>
+
+      <div id="dashboard-override-box" class="card hidden" style="border:2px solid var(--accent);background:rgba(0,240,255,0.01);">
+        <div class="form-group" style="margin-bottom:0;">
+          <label class="form-label" style="color:var(--accent);font-weight:800;">🎯 CHOOSE STUDENT PROFILE TO MONITOR &amp; EDIT</label>
+          <select class="form-select" id="dashboard-student-select" onchange="syncDashboardDropdownChange()"></select>
+          <span style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:6px;display:block;">Click on active cards below to manage parameter overrides.</span>
+        </div>
+      </div>
+
+      <div id="dashboard-db-toggle-msg" style="font-size:13px;margin-bottom:16px;color:var(--warn);font-family:var(--mono);font-weight:500;"></div>
+
+      <div style="margin-bottom:8px;">
+        <h3 style="font-size:18px;font-weight:800;" id="subject-header-title">Subject-Wise Summary &amp; Predictor Engine</h3>
+      </div>
+      <div class="subject-stats-container" id="dashboard-subject-stats"></div>
+
+      <div id="creative-admin-panel" class="hidden" style="margin-top:30px;">
+        <div class="grid-2">
+          <div class="card" style="background:rgba(139,92,246,0.01);border-color:var(--accent2);">
+            <div style="font-weight:800;font-size:15px;margin-bottom:10px;">🚨 Day Suspension</div>
+            <div style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:14px;">Mark all scheduled lectures for a date as Cancelled for the selected student.</div>
+            <div class="form-group"><input type="date" class="form-input" id="bulk-cancel-date"></div>
+            <button class="btn-primary" id="btn-suspend-lectures" style="background:var(--danger);width:100%;box-shadow:none;" onclick="executeBulkDayCancellation()">SUSPEND ALL LECTURES</button>
+          </div>
+          <div class="card" style="background:rgba(245,158,11,0.01);border-color:var(--warn);">
+            <div style="font-weight:800;font-size:15px;margin-bottom:10px;">📈 Critical Shortage Monitor (&lt;75%)</div>
+            <div id="shortage-monitor-list" style="max-height:120px;overflow-y:auto;font-family:var(--mono);font-size:12px;color:var(--warn);line-height:1.6;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-routine-config" class="hidden">
+      <div style="margin-bottom:24px;">
+        <div class="section-title">📅 Custom Academic Routine Configuration</div>
+        <div class="section-sub">Write down subject titles separated by commas for each day to map structural matrices instantly.</div>
+      </div>
+      <div class="card">
+        <div id="routine-inputs-wrapper"></div>
+        <button class="btn-primary" style="width: 100%; padding:16px;" onclick="saveCustomRoutineSchedule()">SAVE ROUTINE LAYOUT DESIGN</button>
+      </div>
+    </div>
+
+    <div id="page-tracker" class="hidden">
+      <div style="margin-bottom:24px;">
+        <div class="section-title">📅 Daily Attendance Log Terminal</div>
+        <div class="section-sub" id="tracker-sub-lbl"></div>
+      </div>
+
+      <div id="authority-override-box" class="card hidden" style="border:2px solid var(--accent2);background:rgba(139,92,246,0.01);">
+        <div class="form-group">
+          <label class="form-label">SELECT STUDENT PROFILE (HOD/CR OVERRIDE)</label>
+          <select class="form-select" id="tracker-student-select" onchange="syncTrackerDropdownChange()"></select>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="form-group">
+          <label class="form-label">CHOOSE DATE PROFILE</label>
+          <input type="date" class="form-input" id="tracker-target-date" onchange="loadRoutineForSelectedDate()">
+        </div>
+        <div id="tracker-routine-target-container"></div>
+        <button class="btn-primary" id="tracker-save-record-btn" style="width:100%;margin-top:20px;padding:16px;" onclick="saveDailyAttendanceState()">SAVE RECORD ENTRY</button>
+      </div>
+
+      <div class="card">
+        <div style="font-size:18px;font-weight:800;margin-bottom:18px;">📋 Chronological Day Tracker Log</div>
+        <div id="tracker-history-log-container" style="max-height:350px;overflow-y:auto;border:2px solid var(--border);border-radius:12px;"></div>
+      </div>
+    </div>
+
+    <div id="page-attendance" class="hidden">
+      <div style="margin-bottom:24px;" class="flex items-center justify-between">
+        <div>
+          <h2>Global Register View Matrix</h2>
+          <span style="font-size:12px;font-family:var(--mono);color:var(--accent2);font-weight:600;">🛡️ OFFICIAL CLASSROOM LEDGER</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="sort-control-container">
+            <button class="sort-toggle-btn active" id="matrix-sort-roll-btn" onclick="updateGlobalSortOrder('roll')">Roll No</button>
+            <button class="sort-toggle-btn" id="matrix-sort-reg-btn" onclick="updateGlobalSortOrder('reg')">Reg No</button>
+          </div>
+          <input type="date" class="form-input" id="sheet-direct-date" style="padding:10px;font-size:13px;width:170px;margin-bottom:0;" onchange="buildAttendanceTable()">
+          <input class="search-bar" style="width:240px;margin-bottom:0;" placeholder="Search Reg, Roll, Name..." oninput="filterAttendance(this.value)">
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr id="matrix-header-row"></tr></thead>
+          <tbody id="att-body"></tbody>
+        </table>
+      </div>
+      <button id="sheet-save-btn" class="btn-primary hidden" style="margin-top:20px;width:100%;padding:16px;" onclick="saveInlineSheetAttendanceState()">SAVE BULK SHEET REGISTER EDITS</button>
+    </div>
+     <div id="page-students" class="hidden">
+      
+      <div id="cr-authorization-card" class="card hidden" style="border: 2px solid var(--warn); background: rgba(245,158,11,0.02);">
+        <h2 style="color: var(--warn);">⚠️ Profiles Awaiting Gate Approval</h2>
+        <p class="section-sub" style="margin-bottom: 16px;">Review student self-signins below to admit profiles into standard ledger databases.</p>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>REG NO</th>
+                <th>ROLL NO</th>
+                <th>FULL NAME</th>
+                <th>GENDER</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="auth-queue-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="cr-master-key-station-card" class="card hidden" style="border: 2px solid var(--accent2); background: rgba(139,92,246,0.02);">
+        <h2 style="color: var(--accent); display: flex; align-items: center; gap: 8px;">🛡️ System Security Core Management</h2>
+        <p class="section-sub" style="margin-bottom: 16px;">Authorized Operator Zone: Alter the global administrative gateway handshake passcode instantly.</p>
+        <button class="btn-primary" onclick="triggerInteractiveMasterPasscodeOverride()">⚙️ OVERRIDE SYSTEM MASTER PASSCODE</button>
+      </div>
+          <div class="sort-control-container">
+            <button class="sort-toggle-btn active" id="roster-sort-roll-btn" onclick="updateGlobalSortOrder('roll')">Sort Roll</button>
+            <button class="sort-toggle-btn" id="roster-sort-reg-btn" onclick="updateGlobalSortOrder('reg')">Sort Reg</button>
+          </div>
+        
+        <input class="search-bar" style="width:280px;margin:18px 0;" placeholder="Search Name, Roll, or Reg..." oninput="filterStudents(this.value)">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width:10%;">S.NO</th>
+                <th style="width:20%;">REG NO.</th>
+                <th style="width:15%;">ROLL NO.</th>
+                <th style="width:25%;">NAME</th>
+                <th style="width:15%;">GENDER</th>
+                <th style="width:15%;">MANAGEMENT</th>
+              </tr>
+            </thead>
+            <tbody id="students-body"></tbody>
+          </table>
+        </div>
+      </div>
+    <div id="page-admin-settings" class="hidden">
+      <div style="margin-bottom:24px;">
+        <div class="section-title">🛠️ System Control & Passcode backplane</div>
+        <div class="section-sub">Manage system-wide configuration keys and update system nodes securely.</div>
+      </div>
+      <div class="card" style="border-color: var(--accent2);">
+        <div class="form-group">
+          <label class="form-label" style="color: var(--accent2)">UPDATE ADMINISTRATIVE SYSTEM MASTER KEY</label>
+          <input type="password" class="form-input" id="admin-new-master-key" placeholder="Enter new custom Master Key (numeric strings suggested)">
+          <span style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:6px;display:block;">Updating will alter the SHA-256 validation criteria inside the security checkpoint.</span>
+        </div>
+        <button class="btn-primary" onclick="commitSystemMasterPasscodeOverride()">COMMIT SECURE SYSTEM CORE OVERRIDE</button>
+      </div>
+    </div>
+
+  </div></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDI76zzqB9C9Je5csu-otxy98WJ529_D3A",
+  authDomain: "ams-engine.firebaseapp.com",
+  projectId: "ams-engine",
+  storageBucket: "ams-engine.firebasestorage.app",
+  messagingSenderId: "777867901762",
+  appId: "1:777867901762:web:35601d215e30e6f417a6db",
+  measurementId: "G-QV4ZGZRXQD"
+};
+
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const db = getFirestore(app); 
+
+let ROTINE_CONFIG = {
+  0: [],
+  1: ["Python Programming Lab", "Introduction to Web Design", "Spoken Tutorial/Cisco", "Mentorship"],
+  2: ["Introduction to Web Design Lab", "Engineering Mathematics-II", "Introduction to Web Design", "Python Programming"],
+  3: ["Engineering Mathematics-II", "Communication Skill", "Engineering Chemistry", "Introduction to Web Design"],
+  4: ["Engineering Mathematics-II", "Python Programming", "Engineering Chemistry", "Communication Skill"],
+  5: ["Engineering Chemistry", "Communication Skill", "Engineering Mathematics-II", "Python Programming Lab"],
+  6: ["Introduction to Web Design Lab", "Spoken Tutorial/Cisco", "Sport/Yoga/NCC/NSS"]
+};
+
+if (localStorage.getItem("universal_custom_routine")) {
+  ROTINE_CONFIG = JSON.parse(localStorage.getItem("universal_custom_routine"));
+}
+
+let UNIVERSITY_ROSTER = [];
+let chosenGenderIdentity = 'M';
+let CURRENT_SORT_MODE = 'roll';
+let APP_GLOBAL_BACKPLANE_HASH = "e56b50937a4073356e409ec8fbcd58b97f0a8fc58639e72841cf63d30dc22cb7"; // Fallback default hash for "7368985353"
+
+async function createSHA256Hash(plainString) {
+  const msgBuffer = new TextEncoder().encode(plainString);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+if (!localStorage.getItem("university_live_roster")) {
+  UNIVERSITY_ROSTER = [
+    {roll:'25IOT34', reg:'25155126006', first:'ANKIT', last:'RAJ', g:'M', authorized: true, pinHash: '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'},
+    {roll:'25IOT14', reg:'25155126010', first:'MD IRFAN', last:'RAZA', g:'M', authorized: true, pinHash: '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'},
+    {roll:'25IOT30', reg:'25155126025', first:'ARUNAV', last:'ANANAD', g:'M', authorized: true, pinHash: '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'},
+    {roll:'25IOT23', reg:'25155126056', first:'DHIRAJ', last:'KUMAR', g:'M', authorized: true, pinHash: '03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'}
+  ];
+  localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
+} else {
+  UNIVERSITY_ROSTER = JSON.parse(localStorage.getItem("university_live_roster"));
+}
+
+let OFFICIAL_DB     = {};
+let STUDENT_SELF_DB = {};
+
+function syncDatabaseStateStructures() {
+  if (localStorage.getItem("iot25_official_db")) {
+    OFFICIAL_DB = JSON.parse(localStorage.getItem("iot25_official_db"));
+  } else {
+    UNIVERSITY_ROSTER.forEach(s => { OFFICIAL_DB[s.roll] = {}; });
+    localStorage.setItem("iot25_official_db", JSON.stringify(OFFICIAL_DB));
+  }
+  if (localStorage.getItem("iot25_student_self_db")) {
+    STUDENT_SELF_DB = JSON.parse(localStorage.getItem("iot25_student_self_db"));
+  } else {
+    UNIVERSITY_ROSTER.forEach(s => { STUDENT_SELF_DB[s.roll] = {}; });
+    localStorage.setItem("iot25_student_self_db", JSON.stringify(STUDENT_SELF_DB));
+  }
+}
+syncDatabaseStateStructures();
+
+let currentUser = { name:'', roll:'', reg:'', role:'student', initials:'', guestPersona:'student' };
+let selectedRole = 'student';
+let currentGuestPersona = 'student'; 
+let generatedLiveOTP = '';
+let cachedLoginPayload = null;
+
+let GUEST_SIMULATED_ATTENDANCE = {};
+
+const canvas = document.getElementById('emoji-canvas');
+const ctx    = canvas.getContext('2d');
+const emojiPool = ['🎓','💻','📡','⚛️','⚡','📊','⚙️','🤖'];
+function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+class KineticEmoji {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 12 + 16;
+    this.text = emojiPool[Math.floor(Math.random() * emojiPool.length)];
+    this.vx = (Math.random() - 0.5) * 0.6;
+    this.vy = (Math.random() - 0.5) * 0.6;
+  }
+  update() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x < -30)              this.x = canvas.width + 30;
+    if (this.x > canvas.width+30) this.x = -30;
+    if (this.y < -30)              this.y = canvas.height + 30;
+    if (this.y > canvas.height+30) this.y = -30;
+  }
+  draw() {
+    ctx.font = `${this.size}px Arial`;
+    ctx.globalAlpha = 0.18;
+    ctx.fillText(this.text, this.x, this.y);
+  }
+}
+const particles = [];
+for (let i = 0; i < 25; i++) particles.push(new KineticEmoji());
+(function loop() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(loop); })();
+
+function setGenderIdentity(g) {
+  chosenGenderIdentity = g;
+  document.getElementById('g-male').classList.remove('active');
+  document.getElementById('g-female').classList.remove('active');
+  if(g === 'M') document.getElementById('g-male').classList.add('active');
+  else document.getElementById('g-female').classList.add('active');
+}
+
+function selectRole(role, el) {
+  selectedRole = role;
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  
+  const rollInput = document.getElementById('login-roll');
+  const regInput = document.getElementById('login-reg'); 
+  const nameInput = document.getElementById('login-name');
+  const pinInput = document.getElementById('login-pin');
+  const guestPanel = document.getElementById('guest-persona-panel');
+  const genderBox = document.getElementById('login-gender-box');
+  const demoText = document.getElementById('demo-text');
+  
+  // Reset visibility defaults
+  rollInput.classList.remove('hidden');
+  regInput.classList.remove('hidden'); 
+  nameInput.classList.remove('hidden');
+  pinInput.classList.remove('hidden');
+  guestPanel.classList.add('hidden');
+  genderBox.classList.remove('hidden');
+
+  if (role === 'teacher') {
+    rollInput.classList.add('hidden');
+    regInput.classList.add('hidden'); 
+    nameInput.classList.remove('hidden');
+    pinInput.classList.add('hidden');
+    genderBox.classList.add('hidden');
+    demoText.textContent = "Faculty system checkpoint requests validation challenge matrix sequence.";
+  } else if (role === 'guest') {
+    rollInput.classList.add('hidden');
+    regInput.classList.add('hidden'); 
+    nameInput.classList.add('hidden');
+    pinInput.classList.add('hidden');
+    guestPanel.classList.remove('hidden');
+    genderBox.classList.add('hidden');
+    demoText.textContent = "Sandboxed testing layer. No changes commit into active university databases.";
+  } else if (role === 'cr') {
+    demoText.textContent = "CR access requires your personalized credentials and security gateway code.";
+  } else {
+    demoText.textContent = "Enter your Roll & Reg entries along with a 4-digit PIN to synchronize data nodes.";
+  }
+}
+function toggleGuestPersona(persona) {
+  currentGuestPersona = persona;
+  document.getElementById('guest-view-student').classList.remove('active');
+  document.getElementById('guest-view-cr').classList.remove('active');
+  if(persona === 'student') document.getElementById('guest-view-student').classList.add('active');
+  else document.getElementById('guest-view-cr').classList.add('active');
+}
+
+function toggleInlineCardEditor(index) {
+  const editor = document.getElementById(`inline-editor-${index}`);
+  if (editor.classList.contains('hidden')) {
+    editor.classList.remove('hidden');
+  } else {
+    editor.classList.add('hidden');
+  }
+}
+
+function toggleMobileSidebar() {
+  document.getElementById('sidebar').classList.add('mobile-open');
+  document.getElementById('sidebar-overlay').classList.add('active');
+}
+function closeMobileSidebar() {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('sidebar-overlay').classList.remove('active');
+}
+window.toggleMobileSidebar = toggleMobileSidebar;
+window.closeMobileSidebar = closeMobileSidebar;
+
+function updateGlobalSortOrder(mode) {
+  CURRENT_SORT_MODE = mode;
+  document.querySelectorAll('.sort-toggle-btn').forEach(btn => btn.classList.remove('active'));
+  if (mode === 'roll') {
+    if(document.getElementById('matrix-sort-roll-btn')) document.getElementById('matrix-sort-roll-btn').classList.add('active');
+    if(document.getElementById('roster-sort-roll-btn')) document.getElementById('roster-sort-roll-btn').classList.add('active');
+  } else {
+    if(document.getElementById('matrix-sort-reg-btn')) document.getElementById('matrix-sort-reg-btn').classList.add('active');
+    if(document.getElementById('roster-sort-reg-btn')) document.getElementById('roster-sort-reg-btn').classList.add('active');
+  }
+  buildAttendanceTable();
+  buildStudentsTable();
+}
+
+function getSortedApprovedStudentsList() {
+  let list = UNIVERSITY_ROSTER.filter(s => s.authorized === true);
+  return list.sort((a, b) => {
+    if (CURRENT_SORT_MODE === 'roll') {
+      return a.roll.localeCompare(b.roll, undefined, { numeric: true, sensitivity: 'base' });
+    } else {
+      return a.reg.localeCompare(b.reg, undefined, { numeric: true, sensitivity: 'base' });
+    }
+  });
+}
+
+async function downloadCloudDatabaseMatrices() {
+  try {
+    const backplaneSnap = await getDoc(doc(db, "system_matrices", "backplane_config"));
+    if (backplaneSnap.exists() && backplaneSnap.data().masterHash) {
+      APP_GLOBAL_BACKPLANE_HASH = backplaneSnap.data().masterHash;
+    }
+
+    const rosterSnap = await getDoc(doc(db, "configurations", "university_roster"));
+    if (rosterSnap.exists()) {
+      UNIVERSITY_ROSTER = rosterSnap.data().list || [];
+      localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
+    } else {
+      await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
+    }
+    
+    const officialDbSnap = await getDoc(doc(db, "system_matrices", "official_attendance"));
+    if (officialDbSnap.exists()) {
+      OFFICIAL_DB = officialDbSnap.data() || {};
+      localStorage.setItem("iot25_official_db", JSON.stringify(OFFICIAL_DB));
+    } else {
+      await setDoc(doc(db, "system_matrices", "official_attendance"), OFFICIAL_DB);
+    }
+
+    // ⚡ FIX: previously STUDENT_SELF_DB only ever loaded from localStorage, so
+    // self-marked attendance "vanished" on a new browser/device — even though
+    // saveDailyAttendanceState() WAS already writing it to Firestore under
+    // student_logs/{roll} all along. It just was never read back down. Pull the
+    // whole collection here so every student's self-marks are restored on load.
+    await downloadAllStudentSelfLogs();
+
+    buildAttendanceTable();
+    buildStudentsTable();
+  } catch (err) {
+    console.warn("⚠️ Firestore connection failed. Sandbox fallback:", err);
+  }
+}
+
+async function downloadAllStudentSelfLogs() {
+  try {
+    const selfLogsSnap = await getDocs(collection(db, "student_logs"));
+    // Reset local variable structure completely to accept fresh incoming stream
+    STUDENT_SELF_DB = {}; 
+    selfLogsSnap.forEach(docSnap => {
+      STUDENT_SELF_DB[docSnap.id] = JSON.parse(JSON.stringify(docSnap.data() || {}));
+    });
+    localStorage.setItem("iot25_student_self_db", JSON.stringify(STUDENT_SELF_DB));
+  } catch (err) {
+    console.warn("⚠️ Could not sync self-marked logs from cloud:", err);
+  }
+}
+async function doLogin() {
+  if (selectedRole === 'guest') {
+    await proceedWithLogin("Guest User", "GUEST-ROLL", "GUEST-REG", "guest");
+    return;
+  }
+
+  const rollInput     = document.getElementById('login-roll').value.trim().toUpperCase();
+  const regInput      = document.getElementById('login-reg').value.trim().toUpperCase();
+  const nameInputText = document.getElementById('login-name').value.trim();
+  const rawPin        = document.getElementById('login-pin').value.trim();
+
+  if (selectedRole !== 'teacher' && (!rollInput || !regInput)) {
+    alert('Both Roll and Registration Number are required.');
+    return;
+  }
+  if ((selectedRole === 'student' || selectedRole === 'cr') && (!rawPin || !/^\d{4}$/.test(rawPin))) {
+    alert('PIN must be exactly 4 digits.');
+    return;
+  }
+
+  let targetedRoll     = rollInput;
+  let targetedReg      = regInput;
+  let finalDisplayName = "";
+
+  // ════════════════════════════════════════
+  if (selectedRole === 'student' || selectedRole === 'cr') {
+  // ════════════════════════════════════════
+
+    const compiledPinHash = await createSHA256Hash(rawPin);
+    let match = UNIVERSITY_ROSTER.find(s => s.roll === rollInput && s.reg === regInput);
+
+    // ── NEW SIGNUP ──────────────────────────
+    if (!match) {
+      if (!nameInputText) {
+        alert('Account not found. Enter your Full Name to register.');
+        return;
+      }
+      const nameParts  = nameInputText.split(' ');
+      const newProfile = {
+        roll: rollInput, reg: regInput,
+        first: nameParts[0].toUpperCase(),
+        last:  nameParts.slice(1).join(' ').toUpperCase() || ' ',
+        g: chosenGenderIdentity,
+        authorized: false,
+        pinHash: compiledPinHash
+      };
+      UNIVERSITY_ROSTER.push(newProfile);
+      await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
+      localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
+      syncDatabaseStateStructures();
+      alert(`📝 Registration submitted!\nRoll: ${rollInput}\nStatus: PENDING CR APPROVAL.\nYou cannot login until CR approves your account.`);
+      return; // ← STOP — do not log in
+    }
+
+    // ── EXISTING USER: PIN CHECK ────────────
+    if (!match.pinHash) {
+      // First-time login — PIN not set yet, let them claim it
+      const confirmPin = prompt(`First login for ${match.first}.\nRe-enter your chosen PIN to confirm:`);
+      if (!confirmPin || !/^\d{4}$/.test(confirmPin)) {
+        alert("PIN confirmation failed. Try again.");
+        return;
+      }
+      if (await createSHA256Hash(confirmPin) !== compiledPinHash) {
+        alert("PINs do not match. Login denied.");
+        return;
+      }
+      const idx2 = UNIVERSITY_ROSTER.findIndex(s => s.roll === match.roll);
+      UNIVERSITY_ROSTER[idx2].pinHash = compiledPinHash;
+      match.pinHash = compiledPinHash;
+      await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
+      localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
+      alert(`✅ PIN locked for ${match.first}! Logging in now.`);
+
+    } else if (match.pinHash !== compiledPinHash) {
+      alert("✕ Access Denied: Incorrect PIN.");
+      return;
+    }
+
+    // ── AUTHORIZATION CHECK ─────────────────
+    if (match.authorized === false) {
+      alert(`⏳ Account [${match.roll}] is pending CR approval.\nContact your Class Representative.`);
+      return;
+    }
+
+    // ── ALL CHECKS PASSED ───────────────────
+    targetedRoll     = match.roll;
+    targetedReg      = match.reg;
+    finalDisplayName = `${match.first} ${match.last}`; // ← INSIDE the if block, BEFORE closing }
+
+  // ════════════════════════════════════════
+  } else {
+  // ════════════════════════════════════════
+    // ── FACULTY ──
+    targetedRoll     = 'FACULTY';
+    targetedReg      = 'FACULTY-REG';
+    finalDisplayName = nameInputText || "Faculty Member";
+  }
+
+  cachedLoginPayload = { name: finalDisplayName, roll: targetedRoll, reg: targetedReg, role: selectedRole };
+
+  if (selectedRole === 'cr' || selectedRole === 'teacher') {
+    triggerLiveGatewayHandshake();
+  } else {
+    await proceedWithLogin(finalDisplayName, targetedRoll, targetedReg, selectedRole);
+  }
+}
+function triggerLiveGatewayHandshake() {
+  document.getElementById('security-modal').classList.remove('hidden');
+  const terminal = document.getElementById('gateway-terminal');
+  terminal.innerHTML = '';
+  terminal.innerHTML += `<div class="terminal-log">[TRACE] Initializing handshake layout...</div>`;
+  terminal.innerHTML += `<div class="terminal-log">[INFO] Awaiting backplane master hash challenge verification...</div>`;
+  terminal.scrollTop = terminal.scrollHeight;
+}
+
+async function verifyLiveEmailOTP() {
+  const code = document.getElementById('secure-passcode').value.trim();
+  if (!code) { alert("Please input authorization characters."); return; }
+  
+  const enteredHash = await createSHA256Hash(code);
+  
+  if (enteredHash === APP_GLOBAL_BACKPLANE_HASH) {
+    // ✅ ADD THIS LINE BELOW TO HIDE THE GATEWAY POPUP
+    document.getElementById('security-modal').classList.add('hidden');
+    
+    document.getElementById('secure-passcode').value = '';
+    await proceedWithLogin(cachedLoginPayload.name, cachedLoginPayload.roll, cachedLoginPayload.reg, cachedLoginPayload.role);
+  } else { 
+    alert('✕ Cryptographic Access Denied: Core matrix passcode verification failed.'); 
+  }
+}
+
+async function commitSystemMasterPasscodeOverride() {
+  const newKey = document.getElementById('admin-new-master-key').value.trim();
+  if (!newKey || newKey.length < 4) {
+    alert("Validation Fault: Passcode length insufficient.");
+    return;
+  }
+  const generatedHash = await createSHA256Hash(newKey);
+  try {
+    await setDoc(doc(db, "system_matrices", "backplane_config"), { masterHash: generatedHash });
+    APP_GLOBAL_BACKPLANE_HASH = generatedHash;
+    document.getElementById('admin-new-master-key').value = '';
+    alert("⚡ System Core Security Matrix committed and updated successfully on Cloud backplanes.");
+  } catch (err) {
+    alert("Database sync rejection error.");
+  }
+}
+
+function cancelSecurityGate() { 
+  document.getElementById('security-modal').classList.add('hidden'); 
+  document.getElementById('secure-passcode').value = '';
+}
+
+window.selectRole = selectRole;
+window.setGenderIdentity = setGenderIdentity;
+window.doLogin = doLogin;
+window.verifyLiveEmailOTP = verifyLiveEmailOTP;
+window.commitSystemMasterPasscodeOverride = commitSystemMasterPasscodeOverride;
+window.cancelSecurityGate = cancelSecurityGate;
+window.doLogout = doLogout;
+window.showPage = showPage;
+window.syncDashboardDropdownChange = syncDashboardDropdownChange;
+window.syncTrackerDropdownChange = syncTrackerDropdownChange;
+window.saveCustomRoutineSchedule = saveCustomRoutineSchedule;
+window.executeGuestOverride = executeGuestOverride;
+window.calculateGuestSimulationValue = calculateGuestSimulationValue;
+window.executeLastPossibleDateOverride = executeLastPossibleDateOverride;
+window.saveDailyAttendanceState = saveDailyAttendanceState;
+window.loadRoutineForSelectedDate = loadRoutineForSelectedDate;
+window.updateGlobalSortOrder = updateGlobalSortOrder;
+window.buildAttendanceTable = buildAttendanceTable;
+window.saveInlineSheetAttendanceState = saveInlineSheetAttendanceState;
+window.executeBulkDayCancellation = executeBulkDayCancellation;
+window.processGateClearanceAction = processGateClearanceAction;
+window.toggleGuestPersona = toggleGuestPersona;
+window.toggleInlineCardEditor = toggleInlineCardEditor;
+window.filterAttendance = filterAttendance;
+window.filterStudents = filterStudents;
+
+async function overrideStudentPasswordMatrix(targetRoll) {
+  let idx = UNIVERSITY_ROSTER.findIndex(s => s.roll === targetRoll);
+  if (idx === -1) { alert("Target ledger node not found."); return; }
+  
+  const newRawPin = prompt(`Authorization Clear: Input custom new 4-Digit Security PIN for user [${targetRoll}]:`);
+  if (!newRawPin || newRawPin.length !== 4 || isNaN(newRawPin)) {
+    alert("Operation Aborted: Execution requires exactly a 4-digit numeric block.");
+    return;
+  }
+  
+  const customPinHash = await createSHA256Hash(newRawPin);
+  UNIVERSITY_ROSTER[idx].pinHash = customPinHash;
+  
+  try {
+    await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
+    localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
+    alert(`🔒 Cryptographic Update Complete:\nNode [Roll: ${targetRoll}] pin updated securely inside cloud databases.`);
+    buildStudentsTable();
+  } catch (error) {
+    alert("Database Synchronization Fault.");
+  }
+} 
+async function triggerInteractiveMasterPasscodeOverride() {
+  const newPasscode = prompt("Security Clear Validation: Type down the new global Administrative Master Key:");
+  if (!newPasscode || newPasscode.length < 4) {
+    alert("Operation Denied: Input data string sequence must be at least 4 characters.");
+    return;
+  }
+  
+  const generatedHash = await createSHA256Hash(newPasscode);
+  try {
+    await setDoc(doc(db, "system_matrices", "backplane_config"), { masterHash: generatedHash });
+    APP_GLOBAL_BACKPLANE_HASH = generatedHash;
+    alert("⚡ Success: The system-wide administrative gateway handshake key has been updated across cloud backplanes.");
+  } catch (err) {
+    alert("Cloud datastore transmission failure.");
+  }
+}
+window.triggerInteractiveMasterPasscodeOverride = triggerInteractiveMasterPasscodeOverride;
+async function executeStudentSelfPinChange() {
+  const targetRoll = currentUser.roll;
+  let idx = UNIVERSITY_ROSTER.findIndex(s => s.roll === targetRoll);
+  if (idx === -1) { alert("Error locating profile database node."); return; }
+
+  const newRawPin = prompt("🔒 Security Self-Service: Enter your new 4-Digit Security PIN:");
+  if (!newRawPin || newRawPin.length !== 4 || isNaN(newRawPin)) {
+    alert("Operation Denied: PIN updates require an exact 4-digit numeric block.");
+    return;
+  }
+
+  const customPinHash = await createSHA256Hash(newRawPin);
+  UNIVERSITY_ROSTER[idx].pinHash = customPinHash;
+
+  try {
+    await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
+    localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
+    alert("⚡ Success: Your personal security PIN has been updated securely inside cloud databases!");
+    buildStudentsTable();
+  } catch (error) {
+    alert("Cloud compilation sync error. Try again.");
+  }
+}
+window.executeStudentSelfPinChange = executeStudentSelfPinChange;
+window.overrideStudentPasswordMatrix = overrideStudentPasswordMatrix;
+
+async function proceedWithLogin(name, roll, reg, role) {
+  // ⚡ FIX: re-sync self-marked attendance from the cloud right at login too —
+  // not just on initial page load — so switching devices/browsers shows the
+  // latest self-marks immediately instead of starting from an empty local cache.
+  await downloadAllStudentSelfLogs();
+
+  const parts = name.trim().split(' ');
+  const initials = parts.map(p => p[0]).join('').toUpperCase().slice(0,2);
+  
+  currentUser = { 
+    name, 
+    roll, 
+    reg, 
+    role, 
+    initialisms: initials, 
+    guestPersona: (role === 'guest' ? currentGuestPersona : 'student') 
+  };
+
+  document.getElementById('user-display').textContent = name;
+  document.getElementById('user-avatar').textContent = initials;
+  document.getElementById('topbar-role').textContent = role === 'guest' ? `GUEST (${currentUser.guestPersona.toUpperCase()})` : role.toUpperCase();
+   // ADD THESE — local date in YYYY-MM-DD format (correct in IST)
+const today = new Date();
+const localDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+document.getElementById('tracker-target-date').value = localDate;
+document.getElementById('sheet-direct-date').value   = localDate;
+document.getElementById('bulk-cancel-date').value    = localDate;
+  document.getElementById('dash-emoji-title').textContent = `System Cluster Active: Welcome, ${parts[0]}! 🪐`;
+  const emojis = ['📡', '🚀', '🛰️', '🔥', '⚙️', '💎', '⚡'];
+  document.getElementById('dash-emoji-avatar').textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+  const dashSelector    = document.getElementById('dashboard-student-select');
+  const trackerSelector = document.getElementById('tracker-student-select');
+  const sheetNav        = document.getElementById('sidebar-nav-sheet');
+  if(dashSelector && trackerSelector) { dashSelector.innerHTML = ''; trackerSelector.innerHTML = ''; }
+
+ // Strictly restrict admin capability handles to authenticated rows only
+const treatAsAdmin = (role === 'cr' || role === 'teacher');
+  const sortedAuthorizedStudents = getSortedApprovedStudentsList();
+
+  if (treatAsAdmin) {
+    document.getElementById('dashboard-override-box').classList.remove('hidden');
+    document.getElementById('authority-override-box').classList.remove('hidden');
+    document.getElementById('creative-admin-panel').classList.remove('hidden');
+    document.getElementById('sheet-save-btn').classList.remove('hidden');
+    document.getElementById('cr-authorization-card').classList.remove('hidden');
+    document.getElementById('sidebar-nav-admin-settings').classList.remove('hidden');
+    sheetNav.classList.remove('hidden'); 
+  if(document.getElementById('cr-master-key-station-card')) document.getElementById('cr-master-key-station-card').classList.add('hidden');
+    
+    if (role === 'guest') {
+      let opt = document.createElement('option');
+      opt.value = "GUEST-ROLL"; opt.textContent = "SIMULATED GUEST REGISTER NODE [0/0 Base]";
+      if(dashSelector) dashSelector.appendChild(opt);
+      if(trackerSelector) trackerSelector.appendChild(opt.cloneNode(true));
+    } else {
+      sortedAuthorizedStudents.forEach(st => {
+        let opt1 = document.createElement('option');
+        opt1.value = st.roll;
+        opt1.textContent = `[Roll: ${st.roll}] - ${st.first} ${st.last}`;
+        let opt2 = opt1.cloneNode(true);
+        if(dashSelector) dashSelector.appendChild(opt1); 
+        if(trackerSelector) trackerSelector.appendChild(opt2);
+      });
+    }
+    runCreativeShortageMonitorLogs();
+    buildAuthorizationApprovalQueue();
+  } else {
+    document.getElementById('dashboard-override-box').classList.add('hidden');
+    document.getElementById('authority-override-box').classList.add('hidden');
+    document.getElementById('creative-admin-panel').classList.add('hidden');
+    document.getElementById('sheet-save-btn').classList.add('hidden');
+    document.getElementById('cr-authorization-card').classList.add('hidden');
+    document.getElementById('sidebar-nav-admin-settings').classList.add('hidden');
+    if(document.getElementById('cr-master-key-station-card')) document.getElementById('cr-master-key-station-card').classList.add('add');
+    
+    if (role === 'guest' && currentUser.guestPersona === 'student') {
+      sheetNav.classList.add('hidden'); 
+    } else {
+      sheetNav.classList.remove('hidden');
+    }
+  }
+
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+
+  buildRoutineConfigInterface();
+  renderDynamicSubjectStats();
+  buildAttendanceTable();
+  buildStudentsTable();
+  loadRoutineForSelectedDate();
+}
+
+function doLogout() { location.reload(); }
+
+function showPage(page, el) {
+  document.querySelectorAll('[id^="page-"]').forEach(p => p.classList.add('hidden'));
+  document.getElementById('page-' + page).classList.remove('hidden');
+  document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
+  if (el) el.classList.add('active');
+  closeMobileSidebar();
+}
+
+function buildAuthorizationApprovalQueue() {
+  const tbody = document.getElementById('auth-queue-tbody');
+  if(!tbody) return;
+  tbody.innerHTML = '';
+  
+  let pendingList = UNIVERSITY_ROSTER.filter(s => s.authorized === false);
+  if(pendingList.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--muted); font-family:var(--mono); font-size:12px; padding:20px;">Zero student signups pending clearance inside gateway pipeline nodes.</td></tr>`;
+    return;
+  }
+
+  pendingList.forEach(s => {
+    let tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-family:var(--mono); color:var(--accent); font-weight:bold;">${s.reg}</td>
+      <td>${s.roll}</td>
+      <td style="font-weight:600;">${s.first} ${s.last}</td>
+      <td><span class="pill pill-blue">${s.g}</span></td>
+      <td>
+        <div class="flex gap-3">
+          <button class="btn-action-green" onclick="processGateClearanceAction('${s.roll}', true)">APPROVE</button>
+          <button class="btn-action-red" onclick="processGateClearanceAction('${s.roll}', false)">REJECT</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+async function processGateClearanceAction(targetRoll, approveDecision) {
+  let idx = UNIVERSITY_ROSTER.findIndex(s => s.roll === targetRoll);
+  if(idx === -1) return;
+
+  if(approveDecision) {
+    UNIVERSITY_ROSTER[idx].authorized = true;
+    alert(`Authorized entry for node [Roll: ${targetRoll}] completely deployed.`);
+  } else {
+    UNIVERSITY_ROSTER.splice(idx, 1);
+    alert(`Rejected profile signup trace cleared out from system cache indices.`);
+  }
+
+  await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
+  localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
+  
+  buildAuthorizationApprovalQueue();
+  buildStudentsTable();
+  buildAttendanceTable();
+  
+  const dashSelector = document.getElementById('dashboard-student-select');
+  const trackerSelector = document.getElementById('tracker-student-select');
+  if(dashSelector && trackerSelector && currentUser.role !== 'guest') {
+    dashSelector.innerHTML = ''; trackerSelector.innerHTML = '';
+    getSortedApprovedStudentsList().forEach(st => {
+      let opt = document.createElement('option');
+      opt.value = st.roll; opt.textContent = `[Roll: ${st.roll}] - ${st.first} ${st.last}`;
+      dashSelector.appendChild(opt); trackerSelector.appendChild(opt.cloneNode(true));
+    });
+  }
+}
+
+function syncDashboardDropdownChange() {
+  if (currentUser.role !== 'guest') {
+    document.getElementById('tracker-student-select').value = document.getElementById('dashboard-student-select').value;
+  }
+  renderDynamicSubjectStats(); loadRoutineForSelectedDate();
+}
+function syncTrackerDropdownChange() {
+  if (currentUser.role !== 'guest') {
+    document.getElementById('dashboard-student-select').value = document.getElementById('tracker-student-select').value;
+  }
+  renderDynamicSubjectStats(); loadRoutineForSelectedDate();
+}
+if (typeof window.syncDashboardDropdownChange === 'undefined') {
+  window.syncDashboardDropdownChange = syncDashboardDropdownChange;
+}
+if (typeof window.syncTrackerDropdownChange === 'undefined') {
+  window.syncTrackerDropdownChange = syncTrackerDropdownChange;
+}
+function getSelectedDashboardRoll() {
+  if (currentUser.role === 'cr' || currentUser.role === 'teacher') return document.getElementById('dashboard-student-select').value || currentUser.roll;
+  return currentUser.roll;
+}
+function getTargetRoll() {
+  if (currentUser.role === 'cr' || currentUser.role === 'teacher') return document.getElementById('tracker-student-select').value || currentUser.roll;
+  return currentUser.roll;
+}
+function getActiveDatabase() {
+  return (currentUser.role === 'cr' || currentUser.role === 'teacher') ? OFFICIAL_DB : STUDENT_SELF_DB;
+}
+
+function calculateSubjectMetricsForUser(roll, customDB = null) {
+  let subjectStats = {};
+  const CURRENT_ACTIVE_SUBJECTS = Array.from(new Set(Object.values(ROTINE_CONFIG).flat())).filter(Boolean);
+  CURRENT_ACTIVE_SUBJECTS.forEach(sub => { subjectStats[sub] = { conducted:0, attended:0 }; });
+  
+  if (currentUser.role === 'guest') {
+    return GUEST_SIMULATED_ATTENDANCE;
+  }
+
+  const selectedDB = customDB ? customDB : getActiveDatabase();
+  const logs = selectedDB[roll] || {};
+  Object.keys(logs).forEach(date => {
+    Object.keys(logs[date]).forEach(sub => {
+      if (subjectStats[sub]) {
+        const status = logs[date][sub];
+        if (status === 'Present')      { subjectStats[sub].conducted++; subjectStats[sub].attended++; }
+        else if (status === 'Absent')  { subjectStats[sub].conducted++; }
+      }
+    });
+  });
+  return subjectStats;
+}
+
+function buildSubjectPredictorMarkup(attended, conducted) {
+  function classesNeeded(goal) {
+    if (conducted === 0) return 0;
+    if ((attended / conducted) * 100 >= goal) return 0;
+    return Math.ceil((goal * conducted - 100 * attended) / (100 - goal));
+  }
+  function allowedSkips(goal) {
+    if (conducted === 0 || (attended / conducted) * 100 < goal) return 0;
+    return Math.floor((100 * attended - goal * conducted) / goal);
+  }
+
+  const targets = [
+    { pct: 75, label: '75% TARGET', col: 'var(--accent)'  },
+    { pct: 80, label: '80% TARGET', col: 'var(--warn)'    },
+    { pct: 90, label: '90% TARGET', col: 'var(--accent2)' }
+  ];
+
+  const nodes = targets.map(t => {
+    const need  = classesNeeded(t.pct);
+    const skips = allowedSkips(t.pct);
+    let valueHTML, valueColor;
+    
+    if (conducted === 0) {
+      valueHTML = '0';
+      valueColor = 'var(--muted)';
+    } else if (need > 0) {
+      valueHTML  = `+${need} Attend`;
+      valueColor = 'var(--danger)';
+    } else {
+      valueHTML  = `${skips} Skips`;
+      valueColor = t.col;
+    }
+    return `
+      <div class="sub-pred-node">
+        <span class="sub-pred-value" style="color:${valueColor}">${valueHTML}</span>
+        <span class="sub-pred-label" style="color:${t.col}">${t.label}</span>
+      </div>`;
+  }).join('');
+
+  return `<div class="subject-prediction-box">${nodes}</div>`;
+}
+
+function computeGlobalStreaks() {
+  const container = document.getElementById('streak-rankings-box');
+  if(!container) return;
+  container.innerHTML = '';
+
+  if (currentUser.role === 'guest') {
+    container.innerHTML = `<p style="color:var(--muted); font-size:12px; font-family:var(--mono); text-align:center; width:100%; grid-column:span 3; padding:10px;">Streaks disabled in guest sandboxed mode.</p>`;
+    return;
+  }
+
+  let studentStreaks = [];
+  let authorizedList = getSortedApprovedStudentsList();
+
+  authorizedList.forEach(student => {
+    const logs = OFFICIAL_DB[student.roll] || {};
+    const sortedDates = Object.keys(logs).sort((a, b) => new Date(a) - new Date(b));
+
+    let allStatuses = []; 
+    sortedDates.forEach(date => {
+      const dow = new Date(date).getDay();
+      const dayRoutine = ROTINE_CONFIG[dow] || [];
+      dayRoutine.forEach(sub => {
+        const status = logs[date][sub];
+        if (status === 'Present') allStatuses.push('Present');
+        else if (status === 'Absent') allStatuses.push('Absent');
+      });
+    });
+
+    let currentStreak = 0, maxStreak = 0;
+    allStatuses.forEach(s => {
+      if (s === 'Present') {
+        currentStreak++;
+        if (currentStreak > maxStreak) maxStreak = currentStreak;
+      } else {
+        currentStreak = 0;
+      }
+    });
+
+    studentStreaks.push({
+      name: `${student.first} ${student.last}`.trim(),
+      roll: student.roll,
+      streak: maxStreak
+    });
+  });
+
+  studentStreaks.sort((a, b) => b.streak - a.streak);
+  const medals = ['🥇', '🥈', '🥉'];
+
+  studentStreaks.slice(0, 3).forEach((item, idx) => {
+    const card = document.createElement('div');
+    card.className = `streak-card rank-${idx + 1}`;
+    card.innerHTML = `
+      <div class="streak-rank-circle">${medals[idx]}</div>
+      <div class="streak-card-info">
+        <div class="streak-card-name">${item.name}</div>
+        <div class="streak-card-roll">${item.roll}</div>
+      </div>
+      <div class="streak-card-days">🔥 <span>${item.streak}</span> <span style="font-size:10px;color:var(--muted);font-weight:400;">Periods</span></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function buildRoutineConfigInterface() {
+  const container = document.getElementById('routine-inputs-wrapper');
+  if(!container) return;
+  container.innerHTML = '';
+  const dayLabels = ["Sunday (No Class Allocation)", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  
+  for(let i=1; i<=6; i++) {
+    const dayBox = document.createElement('div');
+    dayBox.className = 'routine-day-box';
+    const currentListText = (ROTINE_CONFIG[i] || []).join(', ');
+    dayBox.innerHTML = `
+      <div class="routine-day-title">${dayLabels[i]} Routine Matrix</div>
+      <input type="text" class="form-input" id="routine-day-input-${i}" value="${currentListText}" placeholder="e.g. Chemistry, Mathematics, Python Programming">
+    `;
+    container.appendChild(dayBox);
+  }
+}
+
+function saveCustomRoutineSchedule() {
+  for(let i=1; i<=6; i++) {
+    const rawVal = document.getElementById(`routine-day-input-${i}`).value;
+    ROTINE_CONFIG[i] = rawVal.split(',').map(item => item.trim()).filter(item => item.length > 0);
+  }
+  localStorage.setItem("universal_custom_routine", JSON.stringify(ROTINE_CONFIG));
+  alert('Custom Routine applied successfully across system contexts!');
+  loadRoutineForSelectedDate();
+  renderDynamicSubjectStats();
+  buildAttendanceTable();
+}
+
+function renderDynamicSubjectStats() {
+  const roll      = getSelectedDashboardRoll();
+  const container = document.getElementById('dashboard-subject-stats');
+  if(!container) return;
+  container.innerHTML = '';
+  const msgElement = document.getElementById('dashboard-db-toggle-msg');
+
+  const CURRENT_ACTIVE_SUBJECTS = Array.from(new Set(Object.values(ROTINE_CONFIG).flat())).filter(Boolean);
+
+  if (currentUser.role === 'guest') {
+    const isGuestAdmin = currentUser.guestPersona === 'cr';
+    msgElement.innerHTML = `🛡️ <strong>Guest Sandbox (${currentUser.guestPersona.toUpperCase()}):</strong> Base metrics are initialized to 0/0. Real databases will not be changed.`;
+    
+    CURRENT_ACTIVE_SUBJECTS.forEach((sub, idx) => {
+      let simulated = GUEST_SIMULATED_ATTENDANCE[sub] || { conducted: 0, attended: 0 };
+      let pct = simulated.conducted > 0 ? ((simulated.attended / simulated.conducted) * 100).toFixed(1) : "0.0";
+      const colorStyle = parseFloat(pct) >= 75 ? 'color:var(--accent3)' : 'color:var(--danger);font-weight:800;';
+
+      const card = document.createElement('div');
+      card.className = 'subject-stat-mini-card';
+      
+      if (isGuestAdmin) {
+        card.innerHTML = `
+          <div class="card-top-row" onclick="toggleInlineCardEditor(${idx})" style="cursor:pointer;">
+            <div class="subject-stat-title">${sub}</div>
+            <div class="subject-stat-metrics">
+              <span style="${colorStyle}">${pct}%</span><br>
+              <small style="color:var(--muted);font-size:12px;">(${simulated.attended}/${simulated.conducted})</small>
+            </div>
+          </div>
+          ${buildSubjectPredictorMarkup(simulated.attended, simulated.conducted)}
+          <div class="inline-card-editor hidden" id="inline-editor-${idx}">
+            <div class="inline-input-group">
+              <label>Simulate Conducted:</label>
+              <input type="number" id="input-cond-${idx}" value="${simulated.conducted}" min="0">
+            </div>
+            <div class="inline-input-group">
+              <label>Simulate Attended:</label>
+              <input type="number" id="input-att-${idx}" value="${simulated.attended}" min="0">
+            </div>
+            <button class="btn-primary" style="padding:6px 12px;font-size:12px;margin-top:6px;width:100%;box-shadow:none;"
+              onclick="executeGuestOverride('${sub}', ${idx})">CALCULATE TEMPORARY OVERRIDE</button>
+          </div>
+        `;
+      } else {
+        card.innerHTML = `
+          <div class="card-top-row">
+            <div class="subject-stat-title">${sub}</div>
+            <div class="subject-stat-metrics" style="font-size:12px;font-weight:normal;text-align:right;">
+              <span style="color:var(--accent);font-weight:bold;">Official: ${pct}% (${simulated.attended}/${simulated.conducted})</span><br>
+              <span style="color:var(--muted);">Self-Mark: ${pct}% (${simulated.attended}/${simulated.conducted})</span>
+            </div>
+          </div>
+          <div class="inline-card-editor" style="border-top:none; padding-top:0; margin-bottom:4px;">
+            <div class="inline-input-group">
+              <label style="font-size:10px;">Conducted:</label>
+              <input type="number" id="guest-cond-${idx}" value="${simulated.conducted}" min="0" oninput="calculateGuestSimulationValue('${sub}', ${idx})">
+              <label style="font-size:10px; margin-left:10px;">Attended:</label>
+              <input type="number" id="guest-att-${idx}" value="${simulated.attended}" min="0" oninput="calculateGuestSimulationValue('${sub}', ${idx})">
+            </div>
+          </div>
+          <div id="guest-predictor-container-${idx}">
+            ${buildSubjectPredictorMarkup(simulated.attended, simulated.conducted)}
+          </div>
+        `;
+      }
+      container.appendChild(card);
+    });
+    computeGlobalStreaks();
+    return;
+  }
+
+  if (currentUser.role === 'student') {
+    const officialMetrics = calculateSubjectMetricsForUser(roll, OFFICIAL_DB);
+    const selfMetrics     = calculateSubjectMetricsForUser(roll, STUDENT_SELF_DB);
+    if(msgElement) msgElement.textContent = "📊 Metrics Status: Comparing Official List vs. Personal Self-Marked Logs.";
+
+    CURRENT_ACTIVE_SUBJECTS.forEach((sub) => {
+      let offItem  = officialMetrics[sub] || { conducted: 0, attended: 0 };
+      let selfItem = selfMetrics[sub] || { conducted: 0, attended: 0 };
+      let offPct   = offItem.conducted  > 0 ? ((offItem.attended  / offItem.conducted)   * 100).toFixed(1) : "0.0";
+      let selfPct  = selfItem.conducted > 0 ? ((selfItem.attended / selfItem.conducted) * 100).toFixed(1) : "0.0";
+
+      const card = document.createElement('div');
+      card.className = 'subject-stat-mini-card';
+      card.innerHTML = `
+        <div class="card-top-row">
+          <div class="subject-stat-title">${sub}</div>
+          <div class="subject-stat-metrics" style="font-size:12px;font-weight:normal;text-align:right;">
+            <span style="color:var(--accent);font-weight:bold;">Official: ${offPct}% (${offItem.attended}/${offItem.conducted})</span><br>
+            <span style="color:var(--muted);">Self-Mark: ${selfPct}% (${selfItem.attended}/${selfItem.conducted})</span>
+          </div>
+        </div>
+        ${buildSubjectPredictorMarkup(offItem.attended, offItem.conducted)}
+      `;
+      container.appendChild(card);
+    });
+
+  } else {
+    if(msgElement) msgElement.textContent = "⚡ Administrator Console: Directly modifying the Official Database cluster.";
+    const metrics = calculateSubjectMetricsForUser(roll, OFFICIAL_DB);
+
+    CURRENT_ACTIVE_SUBJECTS.forEach((sub, idx) => {
+      const item  = metrics[sub] || { conducted: 0, attended: 0 };
+      const pct   = item.conducted > 0 ? ((item.attended / item.conducted) * 100).toFixed(1) : "0.0";
+      const colorStyle = parseFloat(pct) >= 75 ? 'color:var(--accent3)' : 'color:var(--danger);font-weight:800;';
+
+      const card = document.createElement('div');
+      card.className = 'subject-stat-mini-card';
+      card.innerHTML = `
+        <div class="card-top-row" onclick="toggleInlineCardEditor(${idx})" style="cursor:pointer;">
+          <div class="subject-stat-title">${sub}</div>
+          <div class="subject-stat-metrics">
+            <span style="${colorStyle}">${pct}%</span><br>
+            <small style="color:var(--muted);font-size:12px;">(${item.attended}/${item.conducted})</small>
+          </div>
+        </div>
+        ${buildSubjectPredictorMarkup(item.attended, item.conducted)}
+        <div class="inline-card-editor hidden" id="inline-editor-${idx}">
+          <div class="inline-input-group">
+            <label>Conducted Days Total:</label>
+            <input type="number" id="input-cond-${idx}" value="${item.conducted}" min="0">
+          </div>
+          <div class="inline-input-group">
+            <label>Attended Days Total:</label>
+            <input type="number" id="input-att-${idx}" value="${item.attended}" min="0">
+          </div>
+          <button class="btn-primary" style="padding:6px 12px;font-size:12px;margin-top:6px;width:100%;box-shadow:none;"
+            onclick="executeLastPossibleDateOverride('${roll}','${sub}',${idx})">APPLY TIMELINE OVERRIDE</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  computeGlobalStreaks();
+}
+
+function calculateGuestSimulationValue(subName, idx) {
+  const condInput = parseInt(document.getElementById(`guest-cond-${idx}`).value) || 0;
+  const attInput = parseInt(document.getElementById(`guest-att-${idx}`).value) || 0;
+  GUEST_SIMULATED_ATTENDANCE[subName].conducted = condInput;
+  GUEST_SIMULATED_ATTENDANCE[subName].attended = attInput;
+  const predContainer = document.getElementById(`guest-predictor-container-${idx}`);
+  if(predContainer) predContainer.innerHTML = buildSubjectPredictorMarkup(attInput, condInput);
+}
+
+function executeGuestOverride(subName, idx) {
+  const condInput = parseInt(document.getElementById(`input-cond-${idx}`).value) || 0;
+  const attInput = parseInt(document.getElementById(`input-att-${idx}`).value) || 0;
+  if (attInput > condInput) { alert('Attended cannot exceed conducted classes.'); return; }
+  GUEST_SIMULATED_ATTENDANCE[subName].conducted = condInput;
+  GUEST_SIMULATED_ATTENDANCE[subName].attended = attInput;
+  renderDynamicSubjectStats();
+}
+
+function executeLastPossibleDateOverride(roll, subject, idx) {
+  const reqCond = parseInt(document.getElementById(`input-cond-${idx}`).value) || 0;
+  const reqAtt  = parseInt(document.getElementById(`input-att-${idx}`).value)  || 0;
+  if (reqAtt > reqCond) { alert('Attended cannot exceed Conducted.'); return; }
+  
+  if (!OFFICIAL_DB[roll]) OFFICIAL_DB[roll] = {};
+
+  Object.keys(OFFICIAL_DB[roll]).forEach(date => { 
+    if(OFFICIAL_DB[roll][date][subject]) {
+      delete OFFICIAL_DB[roll][date][subject]; 
+    }
+  });
+
+  let remP = reqAtt;
+  let remA = reqCond - reqAtt;
+  let baseDate = new Date();
+  let walkback = 0;
+
+  while ((remP > 0 || remA > 0) && walkback < 365) {
+    const yr  = baseDate.getFullYear();
+    const mt  = String(baseDate.getMonth()+1).padStart(2,'0');
+    const dy  = String(baseDate.getDate()).padStart(2,'0');
+    const ds  = `${yr}-${mt}-${dy}`;
+    const dow = baseDate.getDay();
+    
+    if ((ROTINE_CONFIG[dow] || []).includes(subject)) {
+      if (!OFFICIAL_DB[roll][ds]) OFFICIAL_DB[roll][ds] = {};
+      
+      if (remP > 0) { 
+        OFFICIAL_DB[roll][ds][subject] = "Present"; 
+        remP--; 
+      } else if (remA > 0) { 
+        OFFICIAL_DB[roll][ds][subject] = "Absent"; 
+        remA--; 
+      }
+    }
+    baseDate.setDate(baseDate.getDate() - 1);
+    walkback++;
+  }
+  
+  localStorage.setItem("iot25_official_db", JSON.stringify(OFFICIAL_DB));
+  alert('Smart routine-aligned changes committed successfully!');
+  
+  renderDynamicSubjectStats(); 
+  buildAttendanceTable(); 
+  loadRoutineForSelectedDate(); 
+  runCreativeShortageMonitorLogs();
+}
+
+function loadRoutineForSelectedDate() {
+  const dateInput = document.getElementById('tracker-target-date').value;
+  const container = document.getElementById('tracker-routine-target-container');
+  if(!container) return;
+  container.innerHTML = '';
+  if (!dateInput) return;
+
+  const roll = getTargetRoll();
+  const [year, month, day] = dateInput.split("-");
+  const dObj = new Date(year, month - 1, day);
+  const dow  = dObj.getDay();
+
+  const dayClasses = ROTINE_CONFIG[dow] || [];
+  const activeDB   = getActiveDatabase();
+  const saved      = (currentUser.role !== 'guest' && activeDB[roll] && activeDB[roll][dateInput]) ? activeDB[roll][dateInput] : {};
+
+  const officialDayRecord = (OFFICIAL_DB[roll] && OFFICIAL_DB[roll][dateInput]) ? OFFICIAL_DB[roll][dateInput] : {};
+
+  if (dayClasses.length === 0) {
+    container.innerHTML = `<p style="text-align:center;color:var(--muted);font-size:13px;padding:20px;font-family:var(--mono);">No academic classes scheduled on Sundays.</p>`;
+    buildHistoryTrackerLogsList(); return;
+  }
+
+  dayClasses.forEach((sub) => {
+    const val = saved[sub] || "unmarked";
+    const cleanID = sub.replace(/[^a-zA-Z0-9]/g, "");
+    
+    const officialStatus = officialDayRecord[sub] || "unmarked";
+    let officialBadgeHtml = '';
+    if(officialStatus === 'Present') {
+      officialBadgeHtml = `<span class="official-tracker-badge" style="color:var(--accent3); background:rgba(16,185,129,0.06); border-color:var(--accent3);">Official: Present</span>`;
+    } else if (officialStatus === 'Absent') {
+      officialBadgeHtml = `<span class="official-tracker-badge" style="color:var(--danger); background:rgba(239,68,68,0.06); border-color:var(--danger);">Official: Absent</span>`;
+    } else if (officialStatus === 'Cancelled') {
+      officialBadgeHtml = `<span class="official-tracker-badge" style="color:var(--muted); background:rgba(255,255,255,0.03); border-color:var(--border);">Official: Cancelled</span>`;
+    } else {
+      officialBadgeHtml = `<span class="official-tracker-badge" style="color:var(--warn); background:rgba(245,158,11,0.05); border-color:var(--warn);">Official: --</span>`;
+    }
+
+    const row = document.createElement('div');
+    row.className = 'class-row-tracker';
+    row.innerHTML = `
+      <div class="tracker-title">Period: ${sub}</div>
+      <div class="radio-options">
+        <label><input type="radio" name="sub-rad-${cleanID}" value="Present"   ${val === 'Present'   ? 'checked' : ''}> Present</label>
+        <label><input type="radio" name="sub-rad-${cleanID}" value="Absent"    ${val === 'Absent'    ? 'checked' : ''}> Absent</label>
+        <label><input type="radio" name="sub-rad-${cleanID}" value="Cancelled" ${val === 'Cancelled' ? 'checked' : ''}> Cancelled</label>
+      </div>
+      ${officialBadgeHtml}`;
+    row.dataset.subjectIndexName = sub;
+    row.dataset.cleanId = cleanID;
+    container.appendChild(row);
+  });
+  buildHistoryTrackerLogsList();
+}
+
+async function saveDailyAttendanceState() {
+  if (currentUser.role === 'guest') {
+    alert("Database access locked: Guest logs cannot save changes onto permanent college files.");
+    return;
+  }
+  const dateInput = document.getElementById('tracker-target-date').value;
+  if (!dateInput) return;
+  const roll = getTargetRoll();
+  
+  const rows = document.querySelectorAll('#tracker-routine-target-container .class-row-tracker');
+  const activeDB   = getActiveDatabase();
+  const storageKey = (currentUser.role === 'cr' || currentUser.role === 'teacher') ? "iot25_official_db" : "iot25_student_self_db";
+  
+  if (!activeDB[roll]) activeDB[roll] = {};
+  if (!activeDB[roll][dateInput]) activeDB[roll][dateInput] = {};
+  
+  rows.forEach(row => {
+    const sub = row.dataset.subjectIndexName, cleanID = row.dataset.cleanId;
+    const sel = document.querySelector(`input[name="sub-rad-${cleanID}"]:checked`);
+    if (sel) activeDB[roll][dateInput][sub] = sel.value;
+  });
+  
+  localStorage.setItem(storageKey, JSON.stringify(activeDB));
+
+  // 🔥 THE FIX: Sanitize the object reference matrix before uploading to Firebase
+  try {
+    if (currentUser.role === 'cr' || currentUser.role === 'teacher') {
+      const sanitizedOfficial = JSON.parse(JSON.stringify(OFFICIAL_DB));
+      await setDoc(doc(db, "system_matrices", "official_attendance"), sanitizedOfficial);
+    } else {
+      // Clean target reference node for student self log entries explicitly
+      const sanitizedSelfLog = JSON.parse(JSON.stringify(STUDENT_SELF_DB[roll] || {}));
+      await setDoc(doc(db, "student_logs", roll), sanitizedSelfLog);
+    }
+    alert('Attendance matrix state saved successfully on Cloud database!');
+  } catch (error) {
+    console.error("Firestore Write Error: ", error);
+    alert('Failed to sync data structures to cloud backplanes.');
+  }
+
+  renderDynamicSubjectStats(); 
+  buildAttendanceTable(); 
+  buildHistoryTrackerLogsList(); 
+  runCreativeShortageMonitorLogs();
+}
+function buildHistoryTrackerLogsList() {
+  const roll = getTargetRoll();
+  const container = document.getElementById('tracker-history-log-container');
+  if(!container) return;
+  container.innerHTML = '';
+  
+  if (currentUser.role === 'guest') {
+    container.innerHTML = `<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px;font-family:var(--mono);">No historical records accessible under sandbox states.</p>`;
+    return;
+  }
+
+  const activeDB = getActiveDatabase();
+  const logs = activeDB[roll] || {};
+  const sortedDates = Object.keys(logs).sort((a, b) => new Date(b) - new Date(a));
+
+  if (sortedDates.length === 0) {
+    container.innerHTML = `<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px;font-family:var(--mono);">No previous records mapped.</p>`;
+    return;
+  }
+
+  sortedDates.forEach(date => {
+    const dow = new Date(date).getDay();
+    const dayRoutine = ROTINE_CONFIG[dow] || [];
+    if (dayRoutine.length === 0) return; 
+
+    const dayLog = logs[date] || {};
+    const relevantSubjects = dayRoutine.filter(sub => dayLog[sub] !== undefined);
+    if (relevantSubjects.length === 0) return;
+
+    const row = document.createElement('div');
+    row.className = 'history-item-row';
+    let tagsHtml = '';
+    relevantSubjects.forEach(sub => {
+      const status = dayLog[sub];
+      const col = status === 'Present'
+        ? 'color:var(--accent3);font-weight:bold;'
+        : (status === 'Absent' ? 'color:var(--danger);font-weight:bold;' : 'color:var(--muted)');
+      tagsHtml += `<div class="history-subject-tag"><span>${sub}</span><span style="${col}">${status}</span></div>`;
+    });
+
+    const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    row.innerHTML = `
+      <div class="history-date">${date}<br><span style="font-size:10px;color:var(--muted);">${dayNames[dow]}</span></div>
+      <div class="history-subjects-list">${tagsHtml}</div>`;
+    container.appendChild(row);
+  });
+}
+
+function buildAttendanceTable(filter = '') {
+  const tbody     = document.getElementById('att-body');
+  const headerRow = document.getElementById('matrix-header-row');
+  if(!tbody || !headerRow) return;
+  const f          = filter.toLowerCase();
+  tbody.innerHTML = '';
+  
+  const targetDate   = document.getElementById('sheet-direct-date').value;
+  if (!targetDate) return;
+
+  const [year, month, day] = targetDate.split("-");
+  const dObj = new Date(year, month - 1, day);
+  const dow  = dObj.getDay();
+
+  const coreSubjects = ROTINE_CONFIG[dow] || [];
+  const isEditMode   = (currentUser.role === 'cr' || currentUser.role === 'teacher' || (currentUser.role === 'guest' && currentUser.guestPersona === 'cr'));
+
+  let approvedStudents = getSortedApprovedStudentsList();
+  let globalCounts = {};
+  coreSubjects.forEach(sub => { globalCounts[sub] = { cond:0, att:0 }; });
+  
+  if (currentUser.role !== 'guest') {
+    approvedStudents.forEach(st => {
+      const stats = calculateSubjectMetricsForUser(st.roll, OFFICIAL_DB);
+      coreSubjects.forEach(sub => { 
+        if(stats[sub]) {
+          globalCounts[sub].cond += stats[sub].conducted; 
+          globalCounts[sub].att += stats[sub].attended; 
+        }
+      });
+    });
+  }
+
+  headerRow.innerHTML = '<th>REG NO</th><th>ROLL</th><th>NAME</th>';
+  
+  if (coreSubjects.length === 0) {
+    headerRow.innerHTML += '<th style="color:var(--warn); text-align:center;">NO LECTURES SCHEDULED</th>';
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--muted); font-family:var(--mono); padding:30px;">No routine tracking paths found for Sundays.</td></tr>`;
+    return;
+  }
+
+  coreSubjects.forEach(sub => {
+    const d   = globalCounts[sub] || { cond: 0, att: 0 };
+    const avg = d.cond > 0 ? ((d.att / d.cond) * 100).toFixed(0) : "0";
+    headerRow.innerHTML += `<th>${sub.toUpperCase()} (${avg}%)</th>`;
+  });
+
+  const studentLoopSource = (currentUser.role === 'guest' && currentUser.guestPersona === 'cr') ? 
+    [{roll:'GUEST-ROLL',reg:'GUEST-REGISTRY-NODE',first:'SIMULATED',last:'GUEST PROFILES',g:'M'}] : approvedStudents;
+
+  studentLoopSource.forEach(s => {
+    const name = `${s.first} ${s.last}`.trim();
+    if (f && !name.toLowerCase().includes(f) && !s.roll.toLowerCase().includes(f) && !s.reg.toLowerCase().includes(f)) return;
+    
+    const metrics = calculateSubjectMetricsForUser(s.roll, OFFICIAL_DB);
+    const dayLogs = (currentUser.role !== 'guest' && OFFICIAL_DB[s.roll] && OFFICIAL_DB[s.roll][targetDate]) ? OFFICIAL_DB[s.roll][targetDate] : {};
+
+    const selfDayLogs = (STUDENT_SELF_DB[s.roll] && STUDENT_SELF_DB[s.roll][targetDate]) ? STUDENT_SELF_DB[s.roll][targetDate] : {};
+
+    const row = document.createElement('tr');
+    if (s.roll === currentUser.roll) row.className = 'highlight-row';
+    
+    let cellsHtml = `
+      <td style="font-family:var(--mono);font-size:12px;font-weight:bold;color:var(--accent);">${s.reg}</td>
+      <td>${s.roll}</td>
+      <td style="font-weight:600;">${name}</td>
+    `;
+
+    coreSubjects.forEach(subKey => {
+      const item = metrics[subKey] || { conducted: 0, attended: 0 };
+      const pct  = (item && item.conducted > 0) ? ((item.attended / item.conducted) * 100).toFixed(0) : "0";
+      let pillClass = 'pill-red';
+      if (pct >= 85) pillClass = 'pill-green';
+      else if (pct >= 75) pillClass = 'pill-blue';
+      else if (pct >= 60) pillClass = 'pill-yellow';
+      
+      const selfStatus = selfDayLogs[subKey] || "unmarked";
+      const officialStatus = dayLogs[subKey] || "unmarked";
+      
+      if (isEditMode) {
+        cellsHtml += `<td>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span class="pill ${pillClass}" style="font-size:9px;padding:2px 6px;">${pct}%</span>
+            <span style="font-size:10px;color:var(--accent2);font-family:var(--mono);font-weight:bold;">Self Log: ${selfStatus}</span>
+          </div>
+          <select class="sheet-select" data-roll="${s.roll}" data-subject="${subKey}" ${currentUser.role === 'guest' ? 'disabled' : ''}>
+            <option value="unmarked" ${officialStatus === 'unmarked' ? 'selected' : ''}>—</option>
+            <option value="Present"  ${officialStatus === 'Present'  ? 'selected' : ''}>Present</option>
+            <option value="Absent"   ${officialStatus === 'Absent'   ? 'selected' : ''}>Absent</option>
+            <option value="Cancelled"${officialStatus === 'Cancelled'? 'selected' : ''}>Cancelled</option>
+          </select></td>`;
+      } else {
+        cellsHtml += `<td>
+          <div style="margin-bottom:4px;"><span class="pill ${pillClass}">${pct}%</span> <small style="color:var(--muted);font-family:var(--mono);">(${item.attended}/${item.conducted})</small></div>
+          <div style="font-size:11px;font-family:var(--mono);color:var(--accent3);font-weight:600;">Official: ${officialStatus}</div>
+        </td>`;
+      }
+    });
+
+    row.innerHTML = cellsHtml;
+    tbody.appendChild(row);
+  });
+}
+
+async function saveInlineSheetAttendanceState() {
+  if (currentUser.role === 'guest') return;
+  const targetDate = document.getElementById('sheet-direct-date').value;
+  if (!targetDate) { alert('Choose a sheet date first.'); return; }
+  document.querySelectorAll('.sheet-select').forEach(sel => {
+    const roll = sel.dataset.roll, subject = sel.dataset.subject, value = sel.value;
+    if (!OFFICIAL_DB[roll]) OFFICIAL_DB[roll] = {};
+    if (!OFFICIAL_DB[roll][targetDate]) OFFICIAL_DB[roll][targetDate] = {};
+    OFFICIAL_DB[roll][targetDate][subject] = value;
+  });
+  localStorage.setItem("iot25_official_db", JSON.stringify(OFFICIAL_DB));
+  
+  await setDoc(doc(db, "system_matrices", "official_attendance"), OFFICIAL_DB);
+  alert('Matrix array modifications saved onto registry.');
+  renderDynamicSubjectStats(); buildAttendanceTable(); runCreativeShortageMonitorLogs();
+}
+
+function executeBulkDayCancellation() {
+  if (currentUser.role === 'guest') return;
+  const targetDate = document.getElementById('bulk-cancel-date').value;
+  if (!targetDate) { alert('Select date configuration profile.'); return; }
+  const roll = getSelectedDashboardRoll();
+  const dow  = new Date(targetDate).getDay();
+  const planned = ROTINE_CONFIG[dow] || [];
+  if (!OFFICIAL_DB[roll]) OFFICIAL_DB[roll] = {};
+  if (!OFFICIAL_DB[roll][targetDate]) OFFICIAL_DB[roll][targetDate] = {};
+  planned.forEach(sub => { OFFICIAL_DB[roll][targetDate][sub] = "Cancelled"; });
+  localStorage.setItem("iot25_official_db", JSON.stringify(OFFICIAL_DB));
+  alert(`Lectures suspended for ${targetDate}`);
+  renderDynamicSubjectStats(); buildAttendanceTable(); loadRoutineForSelectedDate();
+}
+
+function runCreativeShortageMonitorLogs() {
+  const box = document.getElementById('shortage-monitor-list');
+  if(!box) return;
+  box.innerHTML = '';
+  if (currentUser.role === 'guest') {
+    box.innerHTML = '✨ Zero profiles below 75%';
+    return;
+  }
+  let found = false;
+  let approvedStudents = UNIVERSITY_ROSTER.filter(s => s.authorized === true);
+  approvedStudents.forEach(student => {
+    const metrics = calculateSubjectMetricsForUser(student.roll, OFFICIAL_DB);
+    let cond = 0, att = 0;
+    Object.values(metrics).forEach(m => { cond += m.conducted; att += m.attended; });
+    if (cond > 0) {
+      const avg = (att / cond) * 100;
+      if (avg < 75) { found = true; box.innerHTML += `⚠️ ${student.reg} (Roll: ${student.roll}) - ${student.first} (${avg.toFixed(0)}%)<br>`; }
+    }
+  });
+  if (!found) box.innerHTML = '✨ Zero profiles below 75%';
+}
+
+function buildStudentsTable(filter = '') {
+  const tbody = document.getElementById('students-body');
+  if(!tbody) return;
+  const f = filter.toLowerCase();
+  tbody.innerHTML = '';
+  let idx = 1;
+  
+  let approvedStudents = getSortedApprovedStudentsList();
+  const rosterSource = currentUser.role === 'guest' ? 
+    [{roll:'GUEST-NODE',reg:'SANDBOX-REGISTERED',first:'GUEST INTERACTIVE',last:'SANDBOX PROFILE',g:'F'}] : approvedStudents;
+
+  const isAdminSession = (currentUser.role === 'cr' || currentUser.role === 'teacher');
+
+  rosterSource.forEach(s => {
+    const name = `${s.first} ${s.last}`.trim();
+    if (f && !name.toLowerCase().includes(f) && !s.roll.toLowerCase().includes(f) && !s.reg.toLowerCase().includes(f)) return;
+    
+    // Default visibility baseline
+    let managementActionHtml = `<span style="color:var(--muted); font-size:12px; font-family:var(--mono);">Locked</span>`;
+    
+    if (isAdminSession && s.roll !== 'GUEST-NODE') {
+      // CR or Teacher can override ANY student's PIN
+      managementActionHtml = `<button class="btn-action-green" style="font-size:10px; padding:4px 8px;" onclick="overrideStudentPasswordMatrix('${s.roll}')">⚙️ OVERRIDE PIN</button>`;
+    } else if (s.roll === currentUser.roll && s.roll !== 'GUEST-NODE') {
+      // Regular student can change ONLY their own personal login PIN
+      managementActionHtml = `<button class="btn-action-green" style="font-size:10px; padding:4px 8px; background:rgba(0,240,255,0.2); border-color:var(--accent); color:var(--accent);" onclick="executeStudentSelfPinChange()">🔒 CHANGE PIN</button>`;
+    }
+
+    const row = document.createElement('tr');
+    if (s.roll === currentUser.roll) row.className = 'highlight-row';
+    row.innerHTML = `
+      <td style="color:var(--muted);font-family:var(--mono);font-size:12px">${idx}</td>
+      <td style="font-family:var(--mono);font-size:12px;font-weight:bold;color:var(--accent);">${s.reg}</td>
+      <td>${s.roll}</td>
+      <td style="font-weight:600">${name}</td>
+      <td><span class="pill ${s.g === 'F' ? 'pill-blue' : 'pill-green'}">${s.g === 'F' ? 'Female' : 'Male'}</span></td>
+      <td>${managementActionHtml}</td>
+    `;
+    tbody.appendChild(row);
+    idx++;
+  });
+}
+
+function filterAttendance(v) { buildAttendanceTable(v); }
+function filterStudents(v)   { buildStudentsTable(v); }
+
+const CURRENT_ACTIVE_SUBJECTS = Array.from(new Set(Object.values(ROTINE_CONFIG).flat())).filter(Boolean);
+CURRENT_ACTIVE_SUBJECTS.forEach(sub => { GUEST_SIMULATED_ATTENDANCE[sub] = { conducted: 0, attended: 0 }; });
+
+downloadCloudDatabaseMatrices();
+buildRoutineConfigInterface();
+renderDynamicSubjectStats();
+buildAttendanceTable();
+buildStudentsTable();
+loadRoutineForSelectedDate();
+</script>
+</body>
+</html>
