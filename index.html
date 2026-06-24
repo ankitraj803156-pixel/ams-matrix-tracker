@@ -22,7 +22,6 @@
     --mono: 'JetBrains Mono', monospace;
   }
 
-  
   * { margin:0; padding:0; box-sizing:border-box; }
   body { 
     background: var(--bg); 
@@ -390,12 +389,7 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ════════════════════════════════════════════════════════
-     RESPONSIVE / MOBILE LAYOUT
-     Pure CSS adjustments — no feature changes, no logic touched.
-     ════════════════════════════════════════════════════════ */
-
-  /* ── Tablets and small laptops ── */
+  /* Tablets and small laptops */
   @media (max-width: 1024px) {
     .main { padding: 28px 20px; }
     .grid-2 { grid-template-columns: 1fr; gap: 16px; }
@@ -405,16 +399,10 @@
     .emoji-visual-trackers { margin-left: 0; }
   }
 
-  /* ── Phones & narrow tablets ── */
+  /* Phones & narrow tablets */
   @media (max-width: 768px) {
     body { overflow-x: hidden; }
-
-    /* Topbar becomes compact with hamburger */
-    .topbar {
-      padding: 0 14px;
-      gap: 10px;
-      height: 60px;
-    }
+    .topbar { padding: 0 14px; gap: 10px; height: 60px; }
     .mobile-nav-toggle { display: flex; }
     .topbar-logo { font-size: 18px; gap: 4px; }
     .topbar-logo .signature-badge { display: none; }
@@ -424,37 +412,19 @@
     .topbar-user .avatar { width: 28px; height: 28px; font-size: 11px; }
     .logout-btn { padding: 6px 10px; font-size: 11px; }
 
-    /* Sidebar becomes a slide-in drawer */
     .sidebar {
-      top: 60px;
-      left: 0;
-      width: 78vw;
-      max-width: 280px;
-      transform: translateX(-100%);
-      transition: transform 0.28s ease;
-      z-index: 40;
+      top: 60px; left: 0; width: 78vw; max-width: 280px;
+      transform: translateX(-100%); transition: transform 0.28s ease; z-index: 40;
       box-shadow: 8px 0 30px rgba(0,0,0,0.4);
     }
     .sidebar.mobile-open { transform: translateX(0); }
     .sidebar-overlay.active { display: block; }
 
-    /* Main fills full width, no left margin */
-    /* Main fills full width, no left margin */
-    .main {
-      margin-left: 0 !important;
-      margin-top: 60px;
-      padding: 16px 14px 40px;
-      width: 100% !important;
-      max-width: 100vw !important;
-      overflow-x: hidden;
-      display: block;
-    }
-
+    .main { margin-left: 0 !important; margin-top: 60px; padding: 16px 14px 40px; width: 100% !important; max-width: 100vw !important; overflow-x: hidden; display: block; }
     .card { padding: 18px; border-radius: 16px; margin-bottom: 16px; width: 100%; }
     .section-title { font-size: 20px; }
     .section-sub { font-size: 12px; }
 
-    /* Emoji strip stacks vertically */
     .emoji-visual-strip { padding: 16px; flex-direction: column; align-items: flex-start; gap: 14px; width: 100%; }
     .emoji-visual-left { width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
     .emoji-visual-display { font-size: 34px; }
@@ -465,89 +435,21 @@
 
     .features-grid-hub { display: flex; flex-direction: column; gap: 10px; width: 100%; }
     .feature-node-card { padding: 12px; width: 100%; }
-    .feature-icon-wrapper { font-size: 20px; }
-    .feature-title-text { font-size: 12px; }
-    .feature-desc-text { font-size: 10px; }
-
     .streak-banner-wrap { padding: 16px; width: 100%; }
-    .streak-banner-header { flex-wrap: wrap; gap: 8px; }
-    .streak-banner-header h3 { font-size: 14px; }
     .streak-cards-row { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-    .streak-card { padding: 12px 14px; width: 100%; }
-
     .subject-stats-container { display: flex; flex-direction: column; gap: 10px; width: 100%; }
     .subject-stat-mini-card { padding: 14px; width: 100%; }
     .subject-stat-title { max-width: 100%; font-size: 13px; }
     .subject-stat-metrics { font-size: 14px; text-align: left !important; margin-top: 4px; }
     .card-top-row { flex-direction: column; align-items: flex-start; gap: 4px; }
     .subject-prediction-box { display: flex; flex-direction: column; gap: 6px; padding: 10px; width: 100%; }
-    .sub-pred-value { font-size: 11px; }
-    .sub-pred-label { font-size: 8px; }
-
     .grid-2 { display: flex; flex-direction: column; gap: 14px; width: 100%; }
 
-    /* Page headers with flex row that overflow on mobile */
-    #page-attendance > div.flex.items-center.justify-between {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 12px;
-      width: 100%;
-    }
-    #page-attendance .flex.items-center.gap-3 {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 10px;
-      width: 100%;
-    }
-    #page-attendance .flex.items-center.gap-3 .sort-control-container {
-      justify-content: center;
-      width: 100%;
-    }
-    #page-attendance .flex.items-center.gap-3 input[type="date"],
-    #page-attendance .flex.items-center.gap-3 .search-bar {
-      width: 100% !important;
-    }
-
-    #page-students > div[style*="justify-content:space-between"] {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 10px;
-      width: 100%;
-    }
-    #page-students .search-bar { width: 100% !important; }
-
-    /* Tables: allow horizontal scroll, shrink padding/fonts */
-    .table-wrap { border-radius: 12px; width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+    #page-attendance > div.flex.items-center.justify-between { flex-direction: column; align-items: stretch; gap: 12px; width: 100%; }
+    #page-attendance .flex.items-center.gap-3 { flex-direction: column; align-items: stretch; gap: 10px; width: 100%; }
+    .table-wrap { border-radius: 12px; width: 100% !important; overflow-x: auto !important; }
     .data-table th, .data-table td { padding: 10px 12px; font-size: 12px; }
     .data-table { min-width: 750px; table-layout: auto; width: 100%; }
-    .class-row-tracker { padding: 14px; }
-    .official-tracker-badge { position: static; display: inline-block; margin-top: 10px; }
-    .tracker-title { margin-bottom: 8px; }
-    .radio-options { gap: 10px; }
-    .radio-options label { padding: 6px 10px; font-size: 12px; }
-
-    .history-item-row { padding: 12px 14px; flex-direction: column; gap: 8px; }
-    .history-date { white-space: normal; }
-
-    .inline-input-group { flex-wrap: wrap; gap: 8px; }
-    .inline-input-group input { width: 70px; }
-
-    /* Login screen tightened for small viewports */
-    .login-box { width: 100%; padding: 24px 20px; border-radius: 18px; }
-    .login-logo h1 { font-size: 26px; }
-    .role-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
-    .gender-select-wrap { flex-wrap: wrap; }
-
-    #security-modal .login-box { width: 100%; }
-  }
-
-  /* ── Very small phones ── */
-  @media (max-width: 420px) {
-    .topbar-user span { max-width: 60px; }
-    .features-grid-hub { grid-template-columns: 1fr; }
-    .role-grid { grid-template-columns: 1fr 1fr; }
-    .subject-prediction-box { grid-template-columns: 1fr 1fr; }
-    .data-table { min-width: 560px; }
   }
 </style>
 </head>
@@ -558,25 +460,25 @@
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">
-      <div class="badge">ENGINE DESIGN BY ANKIT</div>
+      <div class="badge">DESIGNED BY ANKIT</div>
       <h1>Ams<span style="color:var(--accent)">Engine</span></h1>
-      <p>Dynamic Self-Roster & Configurable Schedule Engine</p>
+      <p>Smart Attendance & Schedule Manager</p>
     </div>
     <div style="margin-bottom:16px;">
       <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--muted);margin-bottom:8px;">SELECT ROLE</div>
       <div class="role-grid">
         <div class="role-btn active" onclick="selectRole('student',this)"><div class="icon">🎓</div><span>STUDENT</span></div>
-        <div class="role-btn" onclick="selectRole('cr',this)"><div class="icon">📋</div><span>CR</span></div>
+        <div class="role-btn" onclick="selectRole('cr',this)"><div class="icon">📋</div><span>ADMIN</span></div>
         <div class="role-btn" onclick="selectRole('teacher',this)"><div class="icon">👨‍🏫</div><span>TEACHER</span></div>
         <div class="role-btn" onclick="selectRole('guest',this)"><div class="icon">👀</div><span>GUEST</span></div>
       </div>
     </div>
 
     <div id="guest-persona-panel" class="guest-sub-panel hidden">
-      <span class="guest-switch-label">Select Persona View Experience</span>
+      <span class="guest-switch-label">Choose What You Want to See</span>
       <div class="guest-switch-grid">
         <div class="guest-opt-btn active" id="guest-view-student" onclick="toggleGuestPersona('student')">As Student View</div>
-        <div class="guest-opt-btn" id="guest-view-cr" onclick="toggleGuestPersona('cr')">As CR/Teacher View</div>
+        <div class="guest-opt-btn" id="guest-view-cr" onclick="toggleGuestPersona('cr')">As Teacher/CR View</div>
       </div>
     </div>
 
@@ -601,18 +503,18 @@
 <div id="security-modal" class="hidden" style="position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(3,7,18,0.95);backdrop-filter:blur(12px);">
   <div class="login-box" style="border-color:var(--accent2);box-shadow:0 0 80px rgba(124,58,237,0.2);width:460px;">
     <div class="login-logo" style="margin-bottom:12px;">
-      <div class="badge" style="background:var(--danger)">SECURITY GATEWAY</div>
-      <h2 style="font-size:24px;font-weight:800;margin-top:10px;">Verification Portal Matrix</h2>
+      <div class="badge" style="background:var(--danger)">SECURITY CHECK</div>
+      <h2 style="font-size:24px;font-weight:800;margin-top:10px;">Admin Verification Portal</h2>
     </div>
     <div id="gateway-terminal"></div>
     <div style="background:var(--surface);border:2px solid var(--border);padding:12px;border-radius:12px;margin-top:14px;margin-bottom:18px;font-size:12px;color:var(--muted);text-align:center;font-family:var(--mono);">
-      🔐 Cryptographic Administrative Handshake Challenge
+      🔐 Secure Password Check
     </div>
     <div class="form-group">
-     <input type="password" class="login-input" id="secure-passcode" placeholder="ENTER ADMINISTRATIVE KEY" style="text-align:center;font-size:16px;letter-spacing:2px;font-weight:bold;">
+     <input type="password" class="login-input" id="secure-passcode" placeholder="ENTER ADMIN PASSWORD" style="text-align:center;font-size:16px;letter-spacing:2px;font-weight:bold;">
     </div>
     <div style="display:flex;gap:12px;">
-      <button class="btn-primary" style="flex:1;" onclick="verifyLiveEmailOTP()">AUTHENTICATE</button>
+      <button class="btn-primary" style="flex:1;" onclick="verifyLiveEmailOTP()">VERIFY</button>
       <button class="btn-ghost" onclick="cancelSecurityGate()">CANCEL</button>
     </div>
   </div>
@@ -662,48 +564,48 @@
         <div class="emoji-visual-left">
           <div class="emoji-visual-display" id="dash-emoji-avatar">🚀</div>
           <div class="emoji-visual-text">
-            <h4 id="dash-emoji-title">System Cluster Active: Welcome, ANKIT!</h4>
-            <p id="dash-emoji-subtitle">🛰️ 💎 Pro Scholar Status Core Matrix Node Active 📡</p>
+            <h4 id="dash-emoji-title">System Status: Welcome, ANKIT!</h4>
+            <p id="dash-emoji-subtitle">🛰️ 💎 Pro Scholar Status Active 📡</p>
             
             <div class="box-ticker-container">
               <div class="box-ticker-wrapper">
-                <div class="box-ticker-item">🚀 Cluster Node: <span class="glow-txt">Live Sync</span></div>
-                <div class="box-ticker-item">📡 Core Stream: <span class="glow-txt">IoT-2025</span></div>
-                <div class="box-ticker-item">🔒 Auth Layer: <span class="glow-txt">SHA-256 Protected</span></div>
-                <div class="box-ticker-item">⚡ Architecture: <span class="glow-txt">Ankit Raj Systems</span></div>
+                <div class="box-ticker-item">🚀 Status: <span class="glow-txt">Live Sync</span></div>
+                <div class="box-ticker-item">📡 Stream: <span class="glow-txt">IoT-2025</span></div>
+                <div class="box-ticker-item">🔒 Security: <span class="glow-txt">SHA-256 Protected</span></div>
+                <div class="box-ticker-item">⚡ Built By: <span class="glow-txt">Ankit Raj Systems</span></div>
               </div>
             </div>
 
           </div>
         </div>
         <div class="emoji-visual-trackers">
-          <div class="emoji-node-stat"><div class="emoji-node-icon">📊</div><div class="emoji-node-lbl">Dynamic Units</div></div>
-          <div class="emoji-node-stat"><div class="emoji-node-icon">🛡️</div><div class="emoji-node-lbl">Secured Node</div></div>
+          <div class="emoji-node-stat"><div class="emoji-node-icon">📊</div><div class="emoji-node-lbl">Live Updates</div></div>
+          <div class="emoji-node-stat"><div class="emoji-node-icon">🛡️</div><div class="emoji-node-lbl">Secured</div></div>
         </div>
       </div>
 
       <div style="margin-bottom: 24px;">
-        <h3 style="font-size:16px; font-weight:800; text-transform: uppercase; letter-spacing: 1px; color: var(--accent2);">⚙️ Core Architecture &amp; System Capabilities</h3>
+        <h3 style="font-size:16px; font-weight:800; text-transform: uppercase; letter-spacing: 1px; color: var(--accent2);">⚙️ What This App Can Do</h3>
         <div class="features-grid-hub">
           <div class="feature-node-card">
             <div class="feature-icon-wrapper">🔮</div>
             <div class="feature-title-text">Predictor Engine</div>
-            <div class="feature-desc-text">Instantly isolates and maps data gaps to outline exactly how many periods must be attended or can be skipped safely.</div>
+            <div class="feature-desc-text">Instantly shows exactly how many classes you must attend or can safely skip to hit your attendance goal.</div>
           </div>
           <div class="feature-node-card">
             <div class="feature-icon-wrapper">👥</div>
-            <div class="feature-title-text">Cross-Ref Register</div>
-            <div class="feature-desc-text">Separates ledger scopes completely. Students view official ledgers, while CR accounts match personal markings beside official rows.</div>
+            <div class="feature-title-text">Two-Way Attendance Check</div>
+            <div class="feature-desc-text">Keeps records separate. Students see the official record, while Admin/Teacher accounts see personal marks placed beside the official rows.</div>
           </div>
           <div class="feature-node-card">
             <div class="feature-icon-wrapper">🔐</div>
             <div class="feature-title-text">SHA-256 Security</div>
-            <div class="feature-desc-text">Translates user input data blocks directly into dynamic hexadecimal cryptographic hashes. Raw plain-text security keys are never stored.</div>
+            <div class="feature-desc-text">Turns every password into a secure scrambled code. Plain-text passwords are never stored anywhere.</div>
           </div>
           <div class="feature-node-card">
             <div class="feature-icon-wrapper">⚙️</div>
-            <div class="feature-title-text">Routines Mapping</div>
-            <div class="feature-desc-text">Dynamically configures weekday routine slots across all tracking systems instantly using comma-separated structure engines.</div>
+            <div class="feature-title-text">Routine Setup</div>
+            <div class="feature-desc-text">Lets you set the weekday class schedule instantly using a simple comma-separated list.</div>
           </div>
         </div>
       </div>
@@ -711,37 +613,37 @@
       <div class="streak-banner-wrap" id="streak-banner-container">
         <div class="streak-banner-header">
           <span style="font-size:20px;">🔥</span>
-          <h3>Active Attendance Streak Leaders</h3>
-          <span class="streak-top3-badge">TOP 3 CONSISTENCIES</span>
+          <h3>Top Attendance Streaks</h3>
+          <span class="streak-top3-badge">TOP 3</span>
         </div>
         <div class="streak-cards-row" id="streak-rankings-box"></div>
       </div>
 
       <div id="dashboard-override-box" class="card hidden" style="border:2px solid var(--accent);background:rgba(0,240,255,0.01);">
         <div class="form-group" style="margin-bottom:0;">
-          <label class="form-label" style="color:var(--accent);font-weight:800;">🎯 CHOOSE STUDENT PROFILE TO MONITOR &amp; EDIT</label>
+          <label class="form-label" style="color:var(--accent);font-weight:800;">🎯 CHOOSE STUDENT PROFILE TO VIEW & EDIT</label>
           <select class="form-select" id="dashboard-student-select" onchange="syncDashboardDropdownChange()"></select>
-          <span style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:6px;display:block;">Click on active cards below to manage parameter overrides.</span>
+          <span style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:6px;display:block;">Click on a card below to manage that subject's record.</span>
         </div>
       </div>
 
       <div id="dashboard-db-toggle-msg" style="font-size:13px;margin-bottom:16px;color:var(--warn);font-family:var(--mono);font-weight:500;"></div>
 
       <div style="margin-bottom:8px;">
-        <h3 style="font-size:18px;font-weight:800;" id="subject-header-title">Subject-Wise Summary &amp; Predictor Engine</h3>
+        <h3 style="font-size:18px;font-weight:800;" id="subject-header-title">Subject-Wise Summary & Predictor</h3>
       </div>
       <div class="subject-stats-container" id="dashboard-subject-stats"></div>
 
       <div id="creative-admin-panel" class="hidden" style="margin-top:30px;">
         <div class="grid-2">
           <div class="card" style="background:rgba(139,92,246,0.01);border-color:var(--accent2);">
-            <div style="font-weight:800;font-size:15px;margin-bottom:10px;">🚨 Day Suspension</div>
-            <div style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:14px;">Mark all scheduled lectures for a date as Cancelled for the selected student.</div>
+            <div style="font-weight:800;font-size:15px;margin-bottom:10px;">🚨 Cancel a Day</div>
+            <div style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:14px;">Mark all scheduled classes for a date as Cancelled for the selected student.</div>
             <div class="form-group"><input type="date" class="form-input" id="bulk-cancel-date"></div>
-            <button class="btn-primary" id="btn-suspend-lectures" style="background:var(--danger);width:100%;box-shadow:none;" onclick="executeBulkDayCancellation()">SUSPEND ALL LECTURES</button>
+            <button class="btn-primary" id="btn-suspend-lectures" style="background:var(--danger);width:100%;box-shadow:none;" onclick="executeBulkDayCancellation()">CANCEL ALL CLASSES</button>
           </div>
           <div class="card" style="background:rgba(245,158,11,0.01);border-color:var(--warn);">
-            <div style="font-weight:800;font-size:15px;margin-bottom:10px;">📈 Critical Shortage Monitor (&lt;75%)</div>
+            <div style="font-weight:800;font-size:15px;margin-bottom:10px;">📈 Low Attendance Watchlist (&lt;75%)</div>
             <div id="shortage-monitor-list" style="max-height:120px;overflow-y:auto;font-family:var(--mono);font-size:12px;color:var(--warn);line-height:1.6;"></div>
           </div>
         </div>
@@ -750,39 +652,39 @@
 
     <div id="page-routine-config" class="hidden">
       <div style="margin-bottom:24px;">
-        <div class="section-title">📅 Custom Academic Routine Configuration</div>
-        <div class="section-sub">Write down subject titles separated by commas for each day to map structural matrices instantly.</div>
+        <div class="section-title">📅 Class Routine Setup</div>
+        <div class="section-sub">Type subject names separated by commas for each day to set up the weekly schedule.</div>
       </div>
       <div class="card">
         <div id="routine-inputs-wrapper"></div>
-        <button class="btn-primary" style="width: 100%; padding:16px;" onclick="saveCustomRoutineSchedule()">SAVE ROUTINE LAYOUT DESIGN</button>
+        <button class="btn-primary" style="width: 100%; padding:16px;" onclick="saveCustomRoutineSchedule()">SAVE ROUTINE</button>
       </div>
     </div>
 
     <div id="page-tracker" class="hidden">
       <div style="margin-bottom:24px;">
-        <div class="section-title">📅 Daily Attendance Log Terminal</div>
+        <div class="section-title">📅 Daily Attendance Log</div>
         <div class="section-sub" id="tracker-sub-lbl"></div>
       </div>
 
       <div id="authority-override-box" class="card hidden" style="border:2px solid var(--accent2);background:rgba(139,92,246,0.01);">
         <div class="form-group">
-          <label class="form-label">SELECT STUDENT PROFILE (HOD/CR OVERRIDE)</label>
+          <label class="form-label">SELECT STUDENT PROFILE (ADMIN/TEACHER OVERRIDE)</label>
           <select class="form-select" id="tracker-student-select" onchange="syncTrackerDropdownChange()"></select>
         </div>
       </div>
 
       <div class="card">
         <div class="form-group">
-          <label class="form-label">CHOOSE DATE PROFILE</label>
+          <label class="form-label">CHOOSE DATE</label>
           <input type="date" class="form-input" id="tracker-target-date" onchange="loadRoutineForSelectedDate()">
         </div>
         <div id="tracker-routine-target-container"></div>
-        <button class="btn-primary" id="tracker-save-record-btn" style="width:100%;margin-top:20px;padding:16px;" onclick="saveDailyAttendanceState()">SAVE RECORD ENTRY</button>
+        <button class="btn-primary" id="tracker-save-record-btn" style="width:100%;margin-top:20px;padding:16px;" onclick="saveDailyAttendanceState()">SAVE RECORD</button>
       </div>
 
       <div class="card">
-        <div style="font-size:18px;font-weight:800;margin-bottom:18px;">📋 Chronological Day Tracker Log</div>
+        <div style="font-size:18px;font-weight:800;margin-bottom:18px;">📋 Day-by-Day Log</div>
         <div id="tracker-history-log-container" style="max-height:350px;overflow-y:auto;border:2px solid var(--border);border-radius:12px;"></div>
       </div>
     </div>
@@ -790,8 +692,8 @@
     <div id="page-attendance" class="hidden">
       <div style="margin-bottom:24px;" class="flex items-center justify-between">
         <div>
-          <h2>Global Register View Matrix</h2>
-          <span style="font-size:12px;font-family:var(--mono);color:var(--accent2);font-weight:600;">🛡️ OFFICIAL CLASSROOM LEDGER</span>
+          <h2>Attendance Register</h2>
+          <span style="font-size:12px;font-family:var(--mono);color:var(--accent2);font-weight:600;">🛡️ OFFICIAL CLASSROOM RECORD</span>
         </div>
         <div class="flex items-center gap-3">
           <div class="sort-control-container">
@@ -808,13 +710,13 @@
           <tbody id="att-body"></tbody>
         </table>
       </div>
-      <button id="sheet-save-btn" class="btn-primary hidden" style="margin-top:20px;width:100%;padding:16px;" onclick="saveInlineSheetAttendanceState()">SAVE BULK SHEET REGISTER EDITS</button>
+      <button id="sheet-save-btn" class="btn-primary hidden" style="margin-top:20px;width:100%;padding:16px;" onclick="saveInlineSheetAttendanceState()">SAVE ALL CHANGES</button>
     </div>
-     <div id="page-students" class="hidden">
-      
+
+    <div id="page-students" class="hidden">
       <div id="cr-authorization-card" class="card hidden" style="border: 2px solid var(--warn); background: rgba(245,158,11,0.02);">
-        <h2 style="color: var(--warn);">⚠️ Profiles Awaiting Gate Approval</h2>
-        <p class="section-sub" style="margin-bottom: 16px;">Review student self-signins below to admit profiles into standard ledger databases.</p>
+        <h2 style="color: var(--warn);">⚠️ Signups Awaiting Approval</h2>
+        <p class="section-sub" style="margin-bottom: 16px;">Review student signups below to add them into the official class list.</p>
         <div class="table-wrap">
           <table class="data-table">
             <thead>
@@ -831,49 +733,75 @@
         </div>
       </div>
 
-      <div id="cr-master-key-station-card" class="card hidden" style="border: 2px solid var(--accent2); background: rgba(139,92,246,0.02);">
-        <h2 style="color: var(--accent); display: flex; align-items: center; gap: 8px;">🛡️ System Security Core Management</h2>
-        <p class="section-sub" style="margin-bottom: 16px;">Authorized Operator Zone: Alter the global administrative gateway handshake passcode instantly.</p>
-        <button class="btn-primary" onclick="triggerInteractiveMasterPasscodeOverride()">⚙️ OVERRIDE SYSTEM MASTER PASSCODE</button>
+      <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 14px;">
+        <div class="sort-control-container">
+          <button class="sort-toggle-btn active" id="roster-sort-roll-btn" onclick="updateGlobalSortOrder('roll')">Sort Roll</button>
+          <button class="sort-toggle-btn" id="roster-sort-reg-btn" onclick="updateGlobalSortOrder('reg')">Sort Reg</button>
+        </div>
+        <input class="search-bar" style="width:280px; margin:0;" placeholder="Search Name, Roll, or Reg..." oninput="filterStudents(this.value)">
       </div>
-          <div class="sort-control-container">
-            <button class="sort-toggle-btn active" id="roster-sort-roll-btn" onclick="updateGlobalSortOrder('roll')">Sort Roll</button>
-            <button class="sort-toggle-btn" id="roster-sort-reg-btn" onclick="updateGlobalSortOrder('reg')">Sort Reg</button>
-          </div>
-        
-        <input class="search-bar" style="width:280px;margin:18px 0;" placeholder="Search Name, Roll, or Reg..." oninput="filterStudents(this.value)">
+
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width:8%;">S.NO</th>
+              <th style="width:18%;">REG NO.</th>
+              <th style="width:13%;">ROLL NO.</th>
+              <th style="width:22%;">NAME</th>
+              <th style="width:12%;">GENDER</th>
+              <th style="width:27%;">MANAGEMENT</th>
+            </tr>
+          </thead>
+          <tbody id="students-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="page-admin-settings" class="hidden">
+      <div style="margin-bottom:24px;">
+        <div class="section-title">🛠️ Account & Password Settings</div>
+        <div class="section-sub">Manage shared system settings and update login passwords securely.</div>
+      </div>
+      
+      <div class="card" style="border-color: var(--accent); background: rgba(0,240,255,0.02); margin-bottom: 24px;">
+        <h3 style="color: var(--accent); font-weight: 800; margin-bottom: 8px;">👨‍🏫 Teacher Authorizations Desk</h3>
+        <p class="section-sub" style="margin-bottom: 14px;">Review new Faculty Registrations below to clear them for portal execution.</p>
         <div class="table-wrap">
           <table class="data-table">
             <thead>
               <tr>
-                <th style="width:10%;">S.NO</th>
-                <th style="width:20%;">REG NO.</th>
-                <th style="width:15%;">ROLL NO.</th>
-                <th style="width:25%;">NAME</th>
-                <th style="width:15%;">GENDER</th>
-                <th style="width:15%;">MANAGEMENT</th>
+                <th>FACULTY NAME</th>
+                <th>SECURITY PROFILE</th>
+                <th>ACTIONS</th>
               </tr>
             </thead>
-            <tbody id="students-body"></tbody>
+            <tbody id="teacher-auth-queue-tbody"></tbody>
           </table>
         </div>
       </div>
-    <div id="page-admin-settings" class="hidden">
-      <div style="margin-bottom:24px;">
-        <div class="section-title">🛠️ System Control & Passcode backplane</div>
-        <div class="section-sub">Manage system-wide configuration keys and update system nodes securely.</div>
-      </div>
+
       <div class="card" style="border-color: var(--accent2);">
         <div class="form-group">
-          <label class="form-label" style="color: var(--accent2)">UPDATE ADMINISTRATIVE SYSTEM MASTER KEY</label>
-          <input type="password" class="form-input" id="admin-new-master-key" placeholder="Enter new custom Master Key (numeric strings suggested)">
-          <span style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:6px;display:block;">Updating will alter the SHA-256 validation criteria inside the security checkpoint.</span>
+          <label class="form-label" style="color: var(--accent2)">CHANGE ADMIN LOGIN PASSWORD</label>
+          <input type="password" class="form-input" id="admin-new-master-key" placeholder="Enter new password (numbers recommended)">
+          <span style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:6px;display:block;">This updates the password used by the Admin/Teacher security check screen.</span>
         </div>
-        <button class="btn-primary" onclick="commitSystemMasterPasscodeOverride()">COMMIT SECURE SYSTEM CORE OVERRIDE</button>
+        <button class="btn-primary" onclick="commitSystemMasterPasscodeOverride()">SAVE NEW PASSWORD</button>
+      </div>
+
+      <div class="card" id="admin-teacher-pin-card" style="border-color: var(--warn);">
+        <div class="form-group">
+          <label class="form-label" style="color: var(--warn)">RESET A TEACHER'S PIN</label>
+          <select class="form-select" id="admin-teacher-select" style="margin-bottom:14px;"></select>
+          <button class="btn-primary" style="background:var(--warn);box-shadow:none;width:100%;" onclick="overrideTeacherPasswordMatrix(document.getElementById('admin-teacher-select').value)">RESET SELECTED TEACHER'S PIN</button>
+          <span style="font-size:12px;color:var(--muted);font-family:var(--mono);margin-top:6px;display:block;">Pick a teacher name and set a new 4-digit PIN for them.</span>
+        </div>
       </div>
     </div>
 
-  </div></div>
+  </div>
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -911,7 +839,8 @@ if (localStorage.getItem("universal_custom_routine")) {
 let UNIVERSITY_ROSTER = [];
 let chosenGenderIdentity = 'M';
 let CURRENT_SORT_MODE = 'roll';
-let APP_GLOBAL_BACKPLANE_HASH = "e56b50937a4073356e409ec8fbcd58b97f0a8fc58639e72841cf63d30dc22cb7"; // Fallback default hash for "7368985353"
+let APP_GLOBAL_BACKPLANE_HASH = "ab9d46f21d88b250eeb536fc68e534b6e415dc590d556450e3411e12fb1a7314"; 
+let TEACHER_PIN_REGISTRY = {};
 
 async function createSHA256Hash(plainString) {
   const msgBuffer = new TextEncoder().encode(plainString);
@@ -930,6 +859,10 @@ if (!localStorage.getItem("university_live_roster")) {
   localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
 } else {
   UNIVERSITY_ROSTER = JSON.parse(localStorage.getItem("university_live_roster"));
+}
+
+if (localStorage.getItem("teacher_pin_registry")) {
+  TEACHER_PIN_REGISTRY = JSON.parse(localStorage.getItem("teacher_pin_registry"));
 }
 
 let OFFICIAL_DB     = {};
@@ -1013,7 +946,6 @@ function selectRole(role, el) {
   const genderBox = document.getElementById('login-gender-box');
   const demoText = document.getElementById('demo-text');
   
-  // Reset visibility defaults
   rollInput.classList.remove('hidden');
   regInput.classList.remove('hidden'); 
   nameInput.classList.remove('hidden');
@@ -1025,9 +957,9 @@ function selectRole(role, el) {
     rollInput.classList.add('hidden');
     regInput.classList.add('hidden'); 
     nameInput.classList.remove('hidden');
-    pinInput.classList.add('hidden');
+    pinInput.classList.remove('hidden');
     genderBox.classList.add('hidden');
-    demoText.textContent = "Faculty system checkpoint requests validation challenge matrix sequence.";
+    demoText.textContent = "Teacher login: Enter name and a 4-digit security PIN. New signups await Admin verification.";
   } else if (role === 'guest') {
     rollInput.classList.add('hidden');
     regInput.classList.add('hidden'); 
@@ -1035,13 +967,14 @@ function selectRole(role, el) {
     pinInput.classList.add('hidden');
     guestPanel.classList.remove('hidden');
     genderBox.classList.add('hidden');
-    demoText.textContent = "Sandboxed testing layer. No changes commit into active university databases.";
+    demoText.textContent = "Test mode only. Nothing you do here changes the real class records.";
   } else if (role === 'cr') {
-    demoText.textContent = "CR access requires your personalized credentials and security gateway code.";
+    demoText.textContent = "Admin login needs your personal credentials plus the admin password.";
   } else {
-    demoText.textContent = "Enter your Roll & Reg entries along with a 4-digit PIN to synchronize data nodes.";
+    demoText.textContent = "Enter your Roll & Reg numbers along with a 4-digit PIN to sync your data.";
   }
 }
+
 function toggleGuestPersona(persona) {
   currentGuestPersona = persona;
   document.getElementById('guest-view-student').classList.remove('active');
@@ -1109,6 +1042,14 @@ async function downloadCloudDatabaseMatrices() {
     } else {
       await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
     }
+
+    const teacherPinSnap = await getDoc(doc(db, "configurations", "teacher_pin_registry"));
+    if (teacherPinSnap.exists()) {
+      TEACHER_PIN_REGISTRY = teacherPinSnap.data().registry || {};
+      localStorage.setItem("teacher_pin_registry", JSON.stringify(TEACHER_PIN_REGISTRY));
+    } else {
+      await setDoc(doc(db, "configurations", "teacher_pin_registry"), { registry: TEACHER_PIN_REGISTRY });
+    }
     
     const officialDbSnap = await getDoc(doc(db, "system_matrices", "official_attendance"));
     if (officialDbSnap.exists()) {
@@ -1118,24 +1059,18 @@ async function downloadCloudDatabaseMatrices() {
       await setDoc(doc(db, "system_matrices", "official_attendance"), OFFICIAL_DB);
     }
 
-    // ⚡ FIX: previously STUDENT_SELF_DB only ever loaded from localStorage, so
-    // self-marked attendance "vanished" on a new browser/device — even though
-    // saveDailyAttendanceState() WAS already writing it to Firestore under
-    // student_logs/{roll} all along. It just was never read back down. Pull the
-    // whole collection here so every student's self-marks are restored on load.
     await downloadAllStudentSelfLogs();
 
     buildAttendanceTable();
     buildStudentsTable();
   } catch (err) {
-    console.warn("⚠️ Firestore connection failed. Sandbox fallback:", err);
+    console.warn("⚠️ Cloud connection failed. Using offline backup data:", err);
   }
 }
 
 async function downloadAllStudentSelfLogs() {
   try {
     const selfLogsSnap = await getDocs(collection(db, "student_logs"));
-    // Reset local variable structure completely to accept fresh incoming stream
     STUDENT_SELF_DB = {}; 
     selfLogsSnap.forEach(docSnap => {
       STUDENT_SELF_DB[docSnap.id] = JSON.parse(JSON.stringify(docSnap.data() || {}));
@@ -1145,6 +1080,7 @@ async function downloadAllStudentSelfLogs() {
     console.warn("⚠️ Could not sync self-marked logs from cloud:", err);
   }
 }
+
 async function doLogin() {
   if (selectedRole === 'guest') {
     await proceedWithLogin("Guest User", "GUEST-ROLL", "GUEST-REG", "guest");
@@ -1160,7 +1096,11 @@ async function doLogin() {
     alert('Both Roll and Registration Number are required.');
     return;
   }
-  if ((selectedRole === 'student' || selectedRole === 'cr') && (!rawPin || !/^\d{4}$/.test(rawPin))) {
+  if (selectedRole === 'teacher' && !nameInputText) {
+    alert('Please enter your name to continue.');
+    return;
+  }
+  if ((selectedRole === 'student' || selectedRole === 'cr' || selectedRole === 'teacher') && (!rawPin || !/^\d{4}$/.test(rawPin))) {
     alert('PIN must be exactly 4 digits.');
     return;
   }
@@ -1169,14 +1109,10 @@ async function doLogin() {
   let targetedReg      = regInput;
   let finalDisplayName = "";
 
-  // ════════════════════════════════════════
   if (selectedRole === 'student' || selectedRole === 'cr') {
-  // ════════════════════════════════════════
-
     const compiledPinHash = await createSHA256Hash(rawPin);
     let match = UNIVERSITY_ROSTER.find(s => s.roll === rollInput && s.reg === regInput);
 
-    // ── NEW SIGNUP ──────────────────────────
     if (!match) {
       if (!nameInputText) {
         alert('Account not found. Enter your Full Name to register.');
@@ -1195,13 +1131,11 @@ async function doLogin() {
       await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
       localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
       syncDatabaseStateStructures();
-      alert(`📝 Registration submitted!\nRoll: ${rollInput}\nStatus: PENDING CR APPROVAL.\nYou cannot login until CR approves your account.`);
-      return; // ← STOP — do not log in
+      alert(`📝 Registration submitted!\nRoll: ${rollInput}\nStatus: PENDING ADMIN APPROVAL.`);
+      return; 
     }
 
-    // ── EXISTING USER: PIN CHECK ────────────
     if (!match.pinHash) {
-      // First-time login — PIN not set yet, let them claim it
       const confirmPin = prompt(`First login for ${match.first}.\nRe-enter your chosen PIN to confirm:`);
       if (!confirmPin || !/^\d{4}$/.test(confirmPin)) {
         alert("PIN confirmation failed. Try again.");
@@ -1223,21 +1157,56 @@ async function doLogin() {
       return;
     }
 
-    // ── AUTHORIZATION CHECK ─────────────────
     if (match.authorized === false) {
-      alert(`⏳ Account [${match.roll}] is pending CR approval.\nContact your Class Representative.`);
+      alert(`⏳ Account [${match.roll}] is pending Admin approval.`);
       return;
     }
 
-    // ── ALL CHECKS PASSED ───────────────────
     targetedRoll     = match.roll;
     targetedReg      = match.reg;
-    finalDisplayName = `${match.first} ${match.last}`; // ← INSIDE the if block, BEFORE closing }
+    finalDisplayName = `${match.first} ${match.last}`;
 
-  // ════════════════════════════════════════
   } else {
-  // ════════════════════════════════════════
-    // ── FACULTY ──
+    // 👨‍🏫 FIXED TEACHER ROUTING MATRIX
+    const teacherKey = nameInputText.toUpperCase();
+    const compiledTeacherPinHash = await createSHA256Hash(rawPin);
+
+    // If the record doesn't exist AT ALL in the schema database
+    if (!TEACHER_PIN_REGISTRY[teacherKey]) {
+      const confirmPin = prompt(`First signup for Faculty: ${nameInputText}.\nConfirm your chosen login 4-digit PIN:`);
+      if (!confirmPin || !/^\d{4}$/.test(confirmPin)) {
+        alert("PIN matrix verification failed.");
+        return;
+      }
+      if (await createSHA256Hash(confirmPin) !== compiledTeacherPinHash) {
+        alert("PIN verification mismatch.");
+        return;
+      }
+      
+      TEACHER_PIN_REGISTRY[teacherKey] = {
+        pinHash: compiledTeacherPinHash,
+        authorized: false
+      };
+      await setDoc(doc(db, "configurations", "teacher_pin_registry"), { registry: TEACHER_PIN_REGISTRY });
+      localStorage.setItem("teacher_pin_registry", JSON.stringify(TEACHER_PIN_REGISTRY));
+      alert(`📝 Teacher application logged!\nStatus: PENDING ADMIN APPROVAL.`);
+      return;
+    } else {
+      // Record exists — determine if its layout matches string hash or approval map object node
+      const registryNode = TEACHER_PIN_REGISTRY[teacherKey];
+      const realHash = typeof registryNode === 'object' ? registryNode.pinHash : registryNode;
+      const isApproved = typeof registryNode === 'object' ? registryNode.authorized : true;
+
+      if (realHash !== compiledTeacherPinHash) {
+        alert("✕ Access Denied: Incorrect Faculty login PIN.");
+        return;
+      }
+      if (!isApproved) {
+        alert("⏳ Access Denied: Faculty access matches status code: PENDING ADMIN APPROVAL.");
+        return;
+      }
+    }
+
     targetedRoll     = 'FACULTY';
     targetedReg      = 'FACULTY-REG';
     finalDisplayName = nameInputText || "Faculty Member";
@@ -1245,42 +1214,41 @@ async function doLogin() {
 
   cachedLoginPayload = { name: finalDisplayName, roll: targetedRoll, reg: targetedReg, role: selectedRole };
 
-  if (selectedRole === 'cr' || selectedRole === 'teacher') {
+  if (selectedRole === 'cr' ) {
     triggerLiveGatewayHandshake();
   } else {
     await proceedWithLogin(finalDisplayName, targetedRoll, targetedReg, selectedRole);
   }
 }
+
 function triggerLiveGatewayHandshake() {
   document.getElementById('security-modal').classList.remove('hidden');
   const terminal = document.getElementById('gateway-terminal');
   terminal.innerHTML = '';
-  terminal.innerHTML += `<div class="terminal-log">[TRACE] Initializing handshake layout...</div>`;
-  terminal.innerHTML += `<div class="terminal-log">[INFO] Awaiting backplane master hash challenge verification...</div>`;
+  terminal.innerHTML += `<div class="terminal-log">[INFO] Starting security check...</div>`;
+  terminal.innerHTML += `<div class="terminal-log">[INFO] Waiting for admin password...</div>`;
   terminal.scrollTop = terminal.scrollHeight;
 }
 
 async function verifyLiveEmailOTP() {
   const code = document.getElementById('secure-passcode').value.trim();
-  if (!code) { alert("Please input authorization characters."); return; }
+  if (!code) { alert("Please enter the admin password."); return; }
   
   const enteredHash = await createSHA256Hash(code);
   
   if (enteredHash === APP_GLOBAL_BACKPLANE_HASH) {
-    // ✅ ADD THIS LINE BELOW TO HIDE THE GATEWAY POPUP
     document.getElementById('security-modal').classList.add('hidden');
-    
     document.getElementById('secure-passcode').value = '';
     await proceedWithLogin(cachedLoginPayload.name, cachedLoginPayload.roll, cachedLoginPayload.reg, cachedLoginPayload.role);
   } else { 
-    alert('✕ Cryptographic Access Denied: Core matrix passcode verification failed.'); 
+    alert('✕ Access Denied: Admin password incorrect.'); 
   }
 }
 
 async function commitSystemMasterPasscodeOverride() {
   const newKey = document.getElementById('admin-new-master-key').value.trim();
   if (!newKey || newKey.length < 4) {
-    alert("Validation Fault: Passcode length insufficient.");
+    alert("Password too short. Please enter at least 4 characters.");
     return;
   }
   const generatedHash = await createSHA256Hash(newKey);
@@ -1288,9 +1256,9 @@ async function commitSystemMasterPasscodeOverride() {
     await setDoc(doc(db, "system_matrices", "backplane_config"), { masterHash: generatedHash });
     APP_GLOBAL_BACKPLANE_HASH = generatedHash;
     document.getElementById('admin-new-master-key').value = '';
-    alert("⚡ System Core Security Matrix committed and updated successfully on Cloud backplanes.");
+    alert("⚡ Admin password updated successfully down across both memory frames and persistent layers.");
   } catch (err) {
-    alert("Database sync rejection error.");
+    alert("Could not save to the cloud. Please try again.");
   }
 }
 
@@ -1320,6 +1288,7 @@ window.buildAttendanceTable = buildAttendanceTable;
 window.saveInlineSheetAttendanceState = saveInlineSheetAttendanceState;
 window.executeBulkDayCancellation = executeBulkDayCancellation;
 window.processGateClearanceAction = processGateClearanceAction;
+window.processTeacherGateClearanceAction = processTeacherGateClearanceAction;
 window.toggleGuestPersona = toggleGuestPersona;
 window.toggleInlineCardEditor = toggleInlineCardEditor;
 window.filterAttendance = filterAttendance;
@@ -1327,11 +1296,11 @@ window.filterStudents = filterStudents;
 
 async function overrideStudentPasswordMatrix(targetRoll) {
   let idx = UNIVERSITY_ROSTER.findIndex(s => s.roll === targetRoll);
-  if (idx === -1) { alert("Target ledger node not found."); return; }
+  if (idx === -1) { alert("Student not found."); return; }
   
-  const newRawPin = prompt(`Authorization Clear: Input custom new 4-Digit Security PIN for user [${targetRoll}]:`);
+  const newRawPin = prompt(`Enter a new 4-digit PIN for student [${targetRoll}]:`);
   if (!newRawPin || newRawPin.length !== 4 || isNaN(newRawPin)) {
-    alert("Operation Aborted: Execution requires exactly a 4-digit numeric block.");
+    alert("Please enter exactly 4 digits.");
     return;
   }
   
@@ -1341,16 +1310,73 @@ async function overrideStudentPasswordMatrix(targetRoll) {
   try {
     await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
     localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
-    alert(`🔒 Cryptographic Update Complete:\nNode [Roll: ${targetRoll}] pin updated securely inside cloud databases.`);
+    alert(`🔒 PIN updated for [Roll: ${targetRoll}].`);
     buildStudentsTable();
   } catch (error) {
-    alert("Database Synchronization Fault.");
+    alert("Could not save to the cloud. Please try again.");
   }
 } 
+
+async function overrideTeacherPasswordMatrix(teacherKeyName) {
+  const newRawPin = prompt(`Enter a new 4-digit PIN for teacher [${teacherKeyName}]:`);
+  if (!newRawPin || newRawPin.length !== 4 || isNaN(newRawPin)) {
+    alert("Please enter exactly 4 digits.");
+    return;
+  }
+  const customPinHash = await createSHA256Hash(newRawPin);
+  if (typeof TEACHER_PIN_REGISTRY[teacherKeyName] === 'object') {
+    TEACHER_PIN_REGISTRY[teacherKeyName].pinHash = customPinHash;
+  } else {
+    TEACHER_PIN_REGISTRY[teacherKeyName] = { pinHash: customPinHash, authorized: true };
+  }
+  try {
+    await setDoc(doc(db, "configurations", "teacher_pin_registry"), { registry: TEACHER_PIN_REGISTRY });
+    localStorage.setItem("teacher_pin_registry", JSON.stringify(TEACHER_PIN_REGISTRY));
+    alert(`🔒 PIN updated for teacher [${teacherKeyName}].`);
+    buildTeacherAccountsTable();
+  } catch (error) {
+    alert("Could not save to the cloud. Please try again.");
+  }
+}
+window.overrideTeacherPasswordMatrix = overrideTeacherPasswordMatrix;
+
+async function removeApprovedStudentFromRoster(targetRoll) {
+  const idx = UNIVERSITY_ROSTER.findIndex(s => s.roll === targetRoll);
+  if (idx === -1) { alert("Student not found."); return; }
+  const student = UNIVERSITY_ROSTER[idx];
+  const sure = confirm(`Remove ${student.first} ${student.last} (Roll: ${student.roll}) from the class list?\n\nThis only removes them from the roster — their past attendance records are kept in the database.`);
+  if (!sure) return;
+
+  UNIVERSITY_ROSTER.splice(idx, 1);
+
+  try {
+    await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
+    localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
+    alert(`Removed ${student.first} ${student.last} from the class list.`);
+  } catch (error) {
+    alert("Could not save to the cloud. Please try again.");
+  }
+
+  buildStudentsTable();
+  buildAttendanceTable();
+
+  const dashSelector = document.getElementById('dashboard-student-select');
+  const trackerSelector = document.getElementById('tracker-student-select');
+  if (dashSelector && trackerSelector && currentUser.role !== 'guest') {
+    dashSelector.innerHTML = ''; trackerSelector.innerHTML = '';
+    getSortedApprovedStudentsList().forEach(st => {
+      let opt = document.createElement('option');
+      opt.value = st.roll; opt.textContent = `[Roll: ${st.roll}] - ${st.first} ${st.last}`;
+      dashSelector.appendChild(opt); trackerSelector.appendChild(opt.cloneNode(true));
+    });
+  }
+}
+window.removeApprovedStudentFromRoster = removeApprovedStudentFromRoster;
+
 async function triggerInteractiveMasterPasscodeOverride() {
-  const newPasscode = prompt("Security Clear Validation: Type down the new global Administrative Master Key:");
+  const newPasscode = prompt("Enter the new admin login password:");
   if (!newPasscode || newPasscode.length < 4) {
-    alert("Operation Denied: Input data string sequence must be at least 4 characters.");
+    alert("Password too short. It must be at least 4 characters.");
     return;
   }
   
@@ -1358,20 +1384,21 @@ async function triggerInteractiveMasterPasscodeOverride() {
   try {
     await setDoc(doc(db, "system_matrices", "backplane_config"), { masterHash: generatedHash });
     APP_GLOBAL_BACKPLANE_HASH = generatedHash;
-    alert("⚡ Success: The system-wide administrative gateway handshake key has been updated across cloud backplanes.");
+    alert("⚡ Success: The admin login password has been updated.");
   } catch (err) {
-    alert("Cloud datastore transmission failure.");
+    alert("Could not save to the cloud. Please try again.");
   }
 }
 window.triggerInteractiveMasterPasscodeOverride = triggerInteractiveMasterPasscodeOverride;
+
 async function executeStudentSelfPinChange() {
   const targetRoll = currentUser.roll;
   let idx = UNIVERSITY_ROSTER.findIndex(s => s.roll === targetRoll);
-  if (idx === -1) { alert("Error locating profile database node."); return; }
+  if (idx === -1) { alert("Could not find your profile."); return; }
 
-  const newRawPin = prompt("🔒 Security Self-Service: Enter your new 4-Digit Security PIN:");
+  const newRawPin = prompt("🔒 Enter your new 4-digit PIN:");
   if (!newRawPin || newRawPin.length !== 4 || isNaN(newRawPin)) {
-    alert("Operation Denied: PIN updates require an exact 4-digit numeric block.");
+    alert("Please enter exactly 4 digits.");
     return;
   }
 
@@ -1381,19 +1408,16 @@ async function executeStudentSelfPinChange() {
   try {
     await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
     localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
-    alert("⚡ Success: Your personal security PIN has been updated securely inside cloud databases!");
+    alert("⚡ Success: Your PIN has been updated!");
     buildStudentsTable();
   } catch (error) {
-    alert("Cloud compilation sync error. Try again.");
+    alert("Could not save to the cloud. Please try again.");
   }
 }
 window.executeStudentSelfPinChange = executeStudentSelfPinChange;
 window.overrideStudentPasswordMatrix = overrideStudentPasswordMatrix;
 
 async function proceedWithLogin(name, roll, reg, role) {
-  // ⚡ FIX: re-sync self-marked attendance from the cloud right at login too —
-  // not just on initial page load — so switching devices/browsers shows the
-  // latest self-marks immediately instead of starting from an empty local cache.
   await downloadAllStudentSelfLogs();
 
   const parts = name.trim().split(' ');
@@ -1410,14 +1434,15 @@ async function proceedWithLogin(name, roll, reg, role) {
 
   document.getElementById('user-display').textContent = name;
   document.getElementById('user-avatar').textContent = initials;
-  document.getElementById('topbar-role').textContent = role === 'guest' ? `GUEST (${currentUser.guestPersona.toUpperCase()})` : role.toUpperCase();
-   // ADD THESE — local date in YYYY-MM-DD format (correct in IST)
-const today = new Date();
-const localDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-document.getElementById('tracker-target-date').value = localDate;
-document.getElementById('sheet-direct-date').value   = localDate;
-document.getElementById('bulk-cancel-date').value    = localDate;
-  document.getElementById('dash-emoji-title').textContent = `System Cluster Active: Welcome, ${parts[0]}! 🪐`;
+  const roleLabel = role === 'cr' ? 'ADMIN' : role.toUpperCase();
+  document.getElementById('topbar-role').textContent = role === 'guest' ? `GUEST (${currentUser.guestPersona === 'cr' ? 'TEACHER/CR' : currentUser.guestPersona.toUpperCase()})` : roleLabel;
+  
+  const today = new Date();
+  const localDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  document.getElementById('tracker-target-date').value = localDate;
+  document.getElementById('sheet-direct-date').value   = localDate;
+  document.getElementById('bulk-cancel-date').value    = localDate;
+  document.getElementById('dash-emoji-title').textContent = `System Status: Welcome, ${parts[0]}! 🪐`;
   const emojis = ['📡', '🚀', '🛰️', '🔥', '⚙️', '💎', '⚡'];
   document.getElementById('dash-emoji-avatar').textContent = emojis[Math.floor(Math.random() * emojis.length)];
 
@@ -1426,8 +1451,7 @@ document.getElementById('bulk-cancel-date').value    = localDate;
   const sheetNav        = document.getElementById('sidebar-nav-sheet');
   if(dashSelector && trackerSelector) { dashSelector.innerHTML = ''; trackerSelector.innerHTML = ''; }
 
- // Strictly restrict admin capability handles to authenticated rows only
-const treatAsAdmin = (role === 'cr' || role === 'teacher');
+  const treatAsAdmin = (role === 'cr' || role === 'teacher');
   const sortedAuthorizedStudents = getSortedApprovedStudentsList();
 
   if (treatAsAdmin) {
@@ -1436,13 +1460,17 @@ const treatAsAdmin = (role === 'cr' || role === 'teacher');
     document.getElementById('creative-admin-panel').classList.remove('hidden');
     document.getElementById('sheet-save-btn').classList.remove('hidden');
     document.getElementById('cr-authorization-card').classList.remove('hidden');
-    document.getElementById('sidebar-nav-admin-settings').classList.remove('hidden');
     sheetNav.classList.remove('hidden'); 
-  if(document.getElementById('cr-master-key-station-card')) document.getElementById('cr-master-key-station-card').classList.add('hidden');
-    
+    if(document.getElementById('cr-master-key-station-card')) document.getElementById('cr-master-key-station-card').classList.add('hidden');
+
+    if (role === 'cr') {
+      document.getElementById('sidebar-nav-admin-settings').classList.remove('hidden');
+    } else {
+      document.getElementById('sidebar-nav-admin-settings').classList.add('hidden');
+    }
     if (role === 'guest') {
       let opt = document.createElement('option');
-      opt.value = "GUEST-ROLL"; opt.textContent = "SIMULATED GUEST REGISTER NODE [0/0 Base]";
+      opt.value = "GUEST-ROLL"; opt.textContent = "TEST GUEST RECORD [0/0 Base]";
       if(dashSelector) dashSelector.appendChild(opt);
       if(trackerSelector) trackerSelector.appendChild(opt.cloneNode(true));
     } else {
@@ -1457,6 +1485,7 @@ const treatAsAdmin = (role === 'cr' || role === 'teacher');
     }
     runCreativeShortageMonitorLogs();
     buildAuthorizationApprovalQueue();
+    buildTeacherApprovalQueue();
   } else {
     document.getElementById('dashboard-override-box').classList.add('hidden');
     document.getElementById('authority-override-box').classList.add('hidden');
@@ -1491,6 +1520,10 @@ function showPage(page, el) {
   document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
   if (el) el.classList.add('active');
   closeMobileSidebar();
+  if (page === 'admin-settings') {
+    populateAdminTeacherDropdown();
+    buildTeacherApprovalQueue();
+  }
 }
 
 function buildAuthorizationApprovalQueue() {
@@ -1500,7 +1533,7 @@ function buildAuthorizationApprovalQueue() {
   
   let pendingList = UNIVERSITY_ROSTER.filter(s => s.authorized === false);
   if(pendingList.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--muted); font-family:var(--mono); font-size:12px; padding:20px;">Zero student signups pending clearance inside gateway pipeline nodes.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--muted); font-family:var(--mono); font-size:12px; padding:20px;">No student signups waiting for approval right now.</td></tr>`;
     return;
   }
 
@@ -1513,13 +1546,62 @@ function buildAuthorizationApprovalQueue() {
       <td><span class="pill pill-blue">${s.g}</span></td>
       <td>
         <div class="flex gap-3">
-          <button class="btn-action-green" onclick="processGateClearanceAction('${s.roll}', true)">APPROVE</button>
-          <button class="btn-action-red" onclick="processGateClearanceAction('${s.roll}', false)">REJECT</button>
+          <button class="btn-action-green" onclick="window.processGateClearanceAction('${s.roll}', true)">APPROVE</button>
+          <button class="btn-action-red" onclick="window.processGateClearanceAction('${s.roll}', false)">REJECT</button>
         </div>
       </td>
     `;
     tbody.appendChild(tr);
   });
+}
+
+function buildTeacherApprovalQueue() {
+  const tbody = document.getElementById('teacher-auth-queue-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  const pendingTeachers = Object.keys(TEACHER_PIN_REGISTRY).filter(key => {
+    const node = TEACHER_PIN_REGISTRY[key];
+    return typeof node === 'object' && node.authorized === false;
+  });
+
+  if (pendingTeachers.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--muted); font-family:var(--mono); font-size:12px; padding:16px;">No faculty signups pending approval.</td></tr>`;
+    return;
+  }
+
+  pendingTeachers.forEach(name => {
+    let tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-weight:600; color:var(--accent2);">${name}</td>
+      <td style="font-family:var(--mono); font-size:11px; color:var(--muted);">SHA-256 LOCKED</td>
+      <td>
+        <div class="flex gap-3">
+          <button class="btn-action-green" onclick="window.processTeacherGateClearanceAction('${name}', true)">APPROVE</button>
+          <button class="btn-action-red" onclick="window.processTeacherGateClearanceAction('${name}', false)">REJECT</button>
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+async function processTeacherGateClearanceAction(teacherName, approveDecision) {
+  if (approveDecision) {
+    if (typeof TEACHER_PIN_REGISTRY[teacherName] === 'object') {
+      TEACHER_PIN_REGISTRY[teacherName].authorized = true;
+    }
+    alert(`Faculty member [${teacherName}] approved and enabled inside active directory.`);
+  } else {
+    delete TEACHER_PIN_REGISTRY[teacherName];
+    alert(`Faculty signup request rejected.`);
+  }
+
+  await setDoc(doc(db, "configurations", "teacher_pin_registry"), { registry: TEACHER_PIN_REGISTRY });
+  localStorage.setItem("teacher_pin_registry", JSON.stringify(TEACHER_PIN_REGISTRY));
+  
+  buildTeacherApprovalQueue();
+  populateAdminTeacherDropdown();
+  buildTeacherAccountsTable();
 }
 
 async function processGateClearanceAction(targetRoll, approveDecision) {
@@ -1528,10 +1610,10 @@ async function processGateClearanceAction(targetRoll, approveDecision) {
 
   if(approveDecision) {
     UNIVERSITY_ROSTER[idx].authorized = true;
-    alert(`Authorized entry for node [Roll: ${targetRoll}] completely deployed.`);
+    alert(`Student [Roll: ${targetRoll}] has been added to the class list.`);
   } else {
     UNIVERSITY_ROSTER.splice(idx, 1);
-    alert(`Rejected profile signup trace cleared out from system cache indices.`);
+    alert(`Signup request rejected and removed.`);
   }
 
   await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
@@ -1565,12 +1647,7 @@ function syncTrackerDropdownChange() {
   }
   renderDynamicSubjectStats(); loadRoutineForSelectedDate();
 }
-if (typeof window.syncDashboardDropdownChange === 'undefined') {
-  window.syncDashboardDropdownChange = syncDashboardDropdownChange;
-}
-if (typeof window.syncTrackerDropdownChange === 'undefined') {
-  window.syncTrackerDropdownChange = syncTrackerDropdownChange;
-}
+
 function getSelectedDashboardRoll() {
   if (currentUser.role === 'cr' || currentUser.role === 'teacher') return document.getElementById('dashboard-student-select').value || currentUser.roll;
   return currentUser.roll;
@@ -1624,7 +1701,7 @@ function buildSubjectPredictorMarkup(attended, conducted) {
   ];
 
   const nodes = targets.map(t => {
-    const need  = classesNeeded(t.pct);
+    const need = classesNeeded(t.pct);
     const skips = allowedSkips(t.pct);
     let valueHTML, valueColor;
     
@@ -1654,7 +1731,7 @@ function computeGlobalStreaks() {
   container.innerHTML = '';
 
   if (currentUser.role === 'guest') {
-    container.innerHTML = `<p style="color:var(--muted); font-size:12px; font-family:var(--mono); text-align:center; width:100%; grid-column:span 3; padding:10px;">Streaks disabled in guest sandboxed mode.</p>`;
+    container.innerHTML = `<p style="color:var(--muted); font-size:12px; font-family:var(--mono); text-align:center; width:100%; grid-column:span 3; padding:10px;">Streaks are turned off in test/guest mode.</p>`;
     return;
   }
 
@@ -1722,7 +1799,7 @@ function buildRoutineConfigInterface() {
     dayBox.className = 'routine-day-box';
     const currentListText = (ROTINE_CONFIG[i] || []).join(', ');
     dayBox.innerHTML = `
-      <div class="routine-day-title">${dayLabels[i]} Routine Matrix</div>
+      <div class="routine-day-title">${dayLabels[i]} Schedule</div>
       <input type="text" class="form-input" id="routine-day-input-${i}" value="${currentListText}" placeholder="e.g. Chemistry, Mathematics, Python Programming">
     `;
     container.appendChild(dayBox);
@@ -1735,7 +1812,7 @@ function saveCustomRoutineSchedule() {
     ROTINE_CONFIG[i] = rawVal.split(',').map(item => item.trim()).filter(item => item.length > 0);
   }
   localStorage.setItem("universal_custom_routine", JSON.stringify(ROTINE_CONFIG));
-  alert('Custom Routine applied successfully across system contexts!');
+  alert('Routine saved successfully!');
   loadRoutineForSelectedDate();
   renderDynamicSubjectStats();
   buildAttendanceTable();
@@ -1752,7 +1829,7 @@ function renderDynamicSubjectStats() {
 
   if (currentUser.role === 'guest') {
     const isGuestAdmin = currentUser.guestPersona === 'cr';
-    msgElement.innerHTML = `🛡️ <strong>Guest Sandbox (${currentUser.guestPersona.toUpperCase()}):</strong> Base metrics are initialized to 0/0. Real databases will not be changed.`;
+    msgElement.innerHTML = `🛡️ <strong>Test Mode (${isGuestAdmin ? 'TEACHER/CR' : currentUser.guestPersona.toUpperCase()}):</strong> Numbers start at 0/0. Real records untouched.`;
     
     CURRENT_ACTIVE_SUBJECTS.forEach((sub, idx) => {
       let simulated = GUEST_SIMULATED_ATTENDANCE[sub] || { conducted: 0, attended: 0 };
@@ -1774,15 +1851,15 @@ function renderDynamicSubjectStats() {
           ${buildSubjectPredictorMarkup(simulated.attended, simulated.conducted)}
           <div class="inline-card-editor hidden" id="inline-editor-${idx}">
             <div class="inline-input-group">
-              <label>Simulate Conducted:</label>
+              <label>Set Total Classes:</label>
               <input type="number" id="input-cond-${idx}" value="${simulated.conducted}" min="0">
             </div>
             <div class="inline-input-group">
-              <label>Simulate Attended:</label>
+              <label>Set Classes Attended:</label>
               <input type="number" id="input-att-${idx}" value="${simulated.attended}" min="0">
             </div>
             <button class="btn-primary" style="padding:6px 12px;font-size:12px;margin-top:6px;width:100%;box-shadow:none;"
-              onclick="executeGuestOverride('${sub}', ${idx})">CALCULATE TEMPORARY OVERRIDE</button>
+              onclick="executeGuestOverride('${sub}', ${idx})">UPDATE TEST VALUES</button>
           </div>
         `;
       } else {
@@ -1796,7 +1873,7 @@ function renderDynamicSubjectStats() {
           </div>
           <div class="inline-card-editor" style="border-top:none; padding-top:0; margin-bottom:4px;">
             <div class="inline-input-group">
-              <label style="font-size:10px;">Conducted:</label>
+              <label style="font-size:10px;">Total Classes:</label>
               <input type="number" id="guest-cond-${idx}" value="${simulated.conducted}" min="0" oninput="calculateGuestSimulationValue('${sub}', ${idx})">
               <label style="font-size:10px; margin-left:10px;">Attended:</label>
               <input type="number" id="guest-att-${idx}" value="${simulated.attended}" min="0" oninput="calculateGuestSimulationValue('${sub}', ${idx})">
@@ -1815,11 +1892,11 @@ function renderDynamicSubjectStats() {
 
   if (currentUser.role === 'student') {
     const officialMetrics = calculateSubjectMetricsForUser(roll, OFFICIAL_DB);
-    const selfMetrics     = calculateSubjectMetricsForUser(roll, STUDENT_SELF_DB);
-    if(msgElement) msgElement.textContent = "📊 Metrics Status: Comparing Official List vs. Personal Self-Marked Logs.";
+    const selfMetrics      = calculateSubjectMetricsForUser(roll, STUDENT_SELF_DB);
+    if(msgElement) msgElement.textContent = "📊 Comparing the Official record vs. your Self-Marked log.";
 
     CURRENT_ACTIVE_SUBJECTS.forEach((sub) => {
-      let offItem  = officialMetrics[sub] || { conducted: 0, attended: 0 };
+      let offItem   = officialMetrics[sub] || { conducted: 0, attended: 0 };
       let selfItem = selfMetrics[sub] || { conducted: 0, attended: 0 };
       let offPct   = offItem.conducted  > 0 ? ((offItem.attended  / offItem.conducted)   * 100).toFixed(1) : "0.0";
       let selfPct  = selfItem.conducted > 0 ? ((selfItem.attended / selfItem.conducted) * 100).toFixed(1) : "0.0";
@@ -1840,7 +1917,7 @@ function renderDynamicSubjectStats() {
     });
 
   } else {
-    if(msgElement) msgElement.textContent = "⚡ Administrator Console: Directly modifying the Official Database cluster.";
+    if(msgElement) msgElement.textContent = "⚡ Admin View: Changes here directly update the Official class record.";
     const metrics = calculateSubjectMetricsForUser(roll, OFFICIAL_DB);
 
     CURRENT_ACTIVE_SUBJECTS.forEach((sub, idx) => {
@@ -1861,15 +1938,15 @@ function renderDynamicSubjectStats() {
         ${buildSubjectPredictorMarkup(item.attended, item.conducted)}
         <div class="inline-card-editor hidden" id="inline-editor-${idx}">
           <div class="inline-input-group">
-            <label>Conducted Days Total:</label>
+            <label>Total Classes Held:</label>
             <input type="number" id="input-cond-${idx}" value="${item.conducted}" min="0">
           </div>
           <div class="inline-input-group">
-            <label>Attended Days Total:</label>
+            <label>Total Classes Attended:</label>
             <input type="number" id="input-att-${idx}" value="${item.attended}" min="0">
           </div>
           <button class="btn-primary" style="padding:6px 12px;font-size:12px;margin-top:6px;width:100%;box-shadow:none;"
-            onclick="executeLastPossibleDateOverride('${roll}','${sub}',${idx})">APPLY TIMELINE OVERRIDE</button>
+            onclick="executeLastPossibleDateOverride('${roll}','${sub}',${idx})">APPLY CHANGE</button>
         </div>
       `;
       container.appendChild(card);
@@ -1938,7 +2015,7 @@ function executeLastPossibleDateOverride(roll, subject, idx) {
   }
   
   localStorage.setItem("iot25_official_db", JSON.stringify(OFFICIAL_DB));
-  alert('Smart routine-aligned changes committed successfully!');
+  alert('Changes saved successfully!');
   
   renderDynamicSubjectStats(); 
   buildAttendanceTable(); 
@@ -1965,7 +2042,7 @@ function loadRoutineForSelectedDate() {
   const officialDayRecord = (OFFICIAL_DB[roll] && OFFICIAL_DB[roll][dateInput]) ? OFFICIAL_DB[roll][dateInput] : {};
 
   if (dayClasses.length === 0) {
-    container.innerHTML = `<p style="text-align:center;color:var(--muted);font-size:13px;padding:20px;font-family:var(--mono);">No academic classes scheduled on Sundays.</p>`;
+    container.innerHTML = `<p style="text-align:center;color:var(--muted);font-size:13px;padding:20px;font-family:var(--mono);">No classes scheduled on Sundays.</p>`;
     buildHistoryTrackerLogsList(); return;
   }
 
@@ -2004,7 +2081,7 @@ function loadRoutineForSelectedDate() {
 
 async function saveDailyAttendanceState() {
   if (currentUser.role === 'guest') {
-    alert("Database access locked: Guest logs cannot save changes onto permanent college files.");
+    alert("Test mode: Guest changes cannot be saved to the real class records.");
     return;
   }
   const dateInput = document.getElementById('tracker-target-date').value;
@@ -2026,20 +2103,18 @@ async function saveDailyAttendanceState() {
   
   localStorage.setItem(storageKey, JSON.stringify(activeDB));
 
-  // 🔥 THE FIX: Sanitize the object reference matrix before uploading to Firebase
   try {
     if (currentUser.role === 'cr' || currentUser.role === 'teacher') {
       const sanitizedOfficial = JSON.parse(JSON.stringify(OFFICIAL_DB));
       await setDoc(doc(db, "system_matrices", "official_attendance"), sanitizedOfficial);
     } else {
-      // Clean target reference node for student self log entries explicitly
       const sanitizedSelfLog = JSON.parse(JSON.stringify(STUDENT_SELF_DB[roll] || {}));
       await setDoc(doc(db, "student_logs", roll), sanitizedSelfLog);
     }
-    alert('Attendance matrix state saved successfully on Cloud database!');
+    alert('Attendance saved successfully!');
   } catch (error) {
     console.error("Firestore Write Error: ", error);
-    alert('Failed to sync data structures to cloud backplanes.');
+    alert('Could not save to the cloud. Please try again.');
   }
 
   renderDynamicSubjectStats(); 
@@ -2047,6 +2122,7 @@ async function saveDailyAttendanceState() {
   buildHistoryTrackerLogsList(); 
   runCreativeShortageMonitorLogs();
 }
+
 function buildHistoryTrackerLogsList() {
   const roll = getTargetRoll();
   const container = document.getElementById('tracker-history-log-container');
@@ -2054,7 +2130,7 @@ function buildHistoryTrackerLogsList() {
   container.innerHTML = '';
   
   if (currentUser.role === 'guest') {
-    container.innerHTML = `<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px;font-family:var(--mono);">No historical records accessible under sandbox states.</p>`;
+    container.innerHTML = `<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px;font-family:var(--mono);">No history available in test mode.</p>`;
     return;
   }
 
@@ -2063,7 +2139,7 @@ function buildHistoryTrackerLogsList() {
   const sortedDates = Object.keys(logs).sort((a, b) => new Date(b) - new Date(a));
 
   if (sortedDates.length === 0) {
-    container.innerHTML = `<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px;font-family:var(--mono);">No previous records mapped.</p>`;
+    container.innerHTML = `<p style="color:var(--muted);font-size:13px;text-align:center;padding:20px;font-family:var(--mono);">No previous records found.</p>`;
     return;
   }
 
@@ -2131,8 +2207,8 @@ function buildAttendanceTable(filter = '') {
   headerRow.innerHTML = '<th>REG NO</th><th>ROLL</th><th>NAME</th>';
   
   if (coreSubjects.length === 0) {
-    headerRow.innerHTML += '<th style="color:var(--warn); text-align:center;">NO LECTURES SCHEDULED</th>';
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--muted); font-family:var(--mono); padding:30px;">No routine tracking paths found for Sundays.</td></tr>`;
+    headerRow.innerHTML += '<th style="color:var(--warn); text-align:center;">NO CLASSES SCHEDULED</th>';
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--muted); font-family:var(--mono); padding:30px;">No classes are scheduled on Sundays.</td></tr>`;
     return;
   }
 
@@ -2151,7 +2227,6 @@ function buildAttendanceTable(filter = '') {
     
     const metrics = calculateSubjectMetricsForUser(s.roll, OFFICIAL_DB);
     const dayLogs = (currentUser.role !== 'guest' && OFFICIAL_DB[s.roll] && OFFICIAL_DB[s.roll][targetDate]) ? OFFICIAL_DB[s.roll][targetDate] : {};
-
     const selfDayLogs = (STUDENT_SELF_DB[s.roll] && STUDENT_SELF_DB[s.roll][targetDate]) ? STUDENT_SELF_DB[s.roll][targetDate] : {};
 
     const row = document.createElement('tr');
@@ -2202,7 +2277,7 @@ function buildAttendanceTable(filter = '') {
 async function saveInlineSheetAttendanceState() {
   if (currentUser.role === 'guest') return;
   const targetDate = document.getElementById('sheet-direct-date').value;
-  if (!targetDate) { alert('Choose a sheet date first.'); return; }
+  if (!targetDate) { alert('Choose a date first.'); return; }
   document.querySelectorAll('.sheet-select').forEach(sel => {
     const roll = sel.dataset.roll, subject = sel.dataset.subject, value = sel.value;
     if (!OFFICIAL_DB[roll]) OFFICIAL_DB[roll] = {};
@@ -2212,14 +2287,14 @@ async function saveInlineSheetAttendanceState() {
   localStorage.setItem("iot25_official_db", JSON.stringify(OFFICIAL_DB));
   
   await setDoc(doc(db, "system_matrices", "official_attendance"), OFFICIAL_DB);
-  alert('Matrix array modifications saved onto registry.');
+  alert('Changes saved successfully!');
   renderDynamicSubjectStats(); buildAttendanceTable(); runCreativeShortageMonitorLogs();
 }
 
 function executeBulkDayCancellation() {
   if (currentUser.role === 'guest') return;
   const targetDate = document.getElementById('bulk-cancel-date').value;
-  if (!targetDate) { alert('Select date configuration profile.'); return; }
+  if (!targetDate) { alert('Please choose a date.'); return; }
   const roll = getSelectedDashboardRoll();
   const dow  = new Date(targetDate).getDay();
   const planned = ROTINE_CONFIG[dow] || [];
@@ -2227,7 +2302,7 @@ function executeBulkDayCancellation() {
   if (!OFFICIAL_DB[roll][targetDate]) OFFICIAL_DB[roll][targetDate] = {};
   planned.forEach(sub => { OFFICIAL_DB[roll][targetDate][sub] = "Cancelled"; });
   localStorage.setItem("iot25_official_db", JSON.stringify(OFFICIAL_DB));
-  alert(`Lectures suspended for ${targetDate}`);
+  alert(`Classes cancelled for ${targetDate}`);
   renderDynamicSubjectStats(); buildAttendanceTable(); loadRoutineForSelectedDate();
 }
 
@@ -2236,7 +2311,7 @@ function runCreativeShortageMonitorLogs() {
   if(!box) return;
   box.innerHTML = '';
   if (currentUser.role === 'guest') {
-    box.innerHTML = '✨ Zero profiles below 75%';
+    box.innerHTML = '✨ No one is below 75%';
     return;
   }
   let found = false;
@@ -2250,7 +2325,7 @@ function runCreativeShortageMonitorLogs() {
       if (avg < 75) { found = true; box.innerHTML += `⚠️ ${student.reg} (Roll: ${student.roll}) - ${student.first} (${avg.toFixed(0)}%)<br>`; }
     }
   });
-  if (!found) box.innerHTML = '✨ Zero profiles below 75%';
+  if (!found) box.innerHTML = '✨ No one is below 75%';
 }
 
 function buildStudentsTable(filter = '') {
@@ -2270,14 +2345,15 @@ function buildStudentsTable(filter = '') {
     const name = `${s.first} ${s.last}`.trim();
     if (f && !name.toLowerCase().includes(f) && !s.roll.toLowerCase().includes(f) && !s.reg.toLowerCase().includes(f)) return;
     
-    // Default visibility baseline
     let managementActionHtml = `<span style="color:var(--muted); font-size:12px; font-family:var(--mono);">Locked</span>`;
     
     if (isAdminSession && s.roll !== 'GUEST-NODE') {
-      // CR or Teacher can override ANY student's PIN
-      managementActionHtml = `<button class="btn-action-green" style="font-size:10px; padding:4px 8px;" onclick="overrideStudentPasswordMatrix('${s.roll}')">⚙️ OVERRIDE PIN</button>`;
+      managementActionHtml = `
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button class="btn-action-green" style="font-size:10px; padding:4px 8px;" onclick="overrideStudentPasswordMatrix('${s.roll}')">⚙️ RESET PIN</button>
+          <button class="btn-action-red" style="font-size:10px; padding:4px 8px;" onclick="removeApprovedStudentFromRoster('${s.roll}')">🗑️ REMOVE</button>
+        </div>`;
     } else if (s.roll === currentUser.roll && s.roll !== 'GUEST-NODE') {
-      // Regular student can change ONLY their own personal login PIN
       managementActionHtml = `<button class="btn-action-green" style="font-size:10px; padding:4px 8px; background:rgba(0,240,255,0.2); border-color:var(--accent); color:var(--accent);" onclick="executeStudentSelfPinChange()">🔒 CHANGE PIN</button>`;
     }
 
@@ -2294,8 +2370,65 @@ function buildStudentsTable(filter = '') {
     tbody.appendChild(row);
     idx++;
   });
+
+  buildTeacherAccountsTable();
 }
 
+function buildTeacherAccountsTable() {
+  let existingBox = document.getElementById('teacher-accounts-box');
+  if (existingBox) existingBox.remove();
+
+  if (currentUser.role !== 'cr') return;
+
+  const teacherNames = Object.keys(TEACHER_PIN_REGISTRY);
+  if (teacherNames.length === 0) return;
+
+  const studentsPage = document.getElementById('page-students');
+  const box = document.createElement('div');
+  box.id = 'teacher-accounts-box';
+  box.className = 'card';
+  box.style.borderColor = 'var(--accent2)';
+  box.style.background = 'rgba(139,92,246,0.02)';
+  box.style.marginTop = '24px';
+  box.innerHTML = `
+    <h2 style="color: var(--accent2);">👨‍🏫 Teacher Accounts Directory</h2>
+    <p class="section-sub" style="margin-bottom: 16px;">Active cleared instructor verification records logged into the current portal matrix frame system.</p>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>TEACHER NAME</th><th style="width:160px;">ACTIONS</th></tr></thead>
+        <tbody>
+          ${teacherNames.map(name => {
+            const node = TEACHER_PIN_REGISTRY[name];
+            const isApproved = typeof node === 'object' ? node.authorized : true;
+            return `
+            <tr>
+              <td style="font-weight:600; color:${isApproved ? 'var(--text)' : 'var(--warn)'};">${name} ${isApproved ? '' : '<small>(Pending Clearance)</small>'}</td>
+              <td><button class="btn-action-green" style="font-size:10px; padding:4px 8px;" onclick="overrideTeacherPasswordMatrix('${name}')">⚙️ RESET PIN</button></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+  studentsPage.appendChild(box);
+}
+
+function populateAdminTeacherDropdown() {
+  const select = document.getElementById('admin-teacher-select');
+  if (!select) return;
+  select.innerHTML = '';
+  const names = Object.keys(TEACHER_PIN_REGISTRY);
+  if (names.length === 0) {
+    select.innerHTML = '<option value="">No teacher accounts yet</option>';
+    return;
+  }
+  names.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name; opt.textContent = name;
+    select.appendChild(opt);
+  });
+}
+window.populateAdminTeacherDropdown = populateAdminTeacherDropdown;
 function filterAttendance(v) { buildAttendanceTable(v); }
 function filterStudents(v)   { buildStudentsTable(v); }
 
