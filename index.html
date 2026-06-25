@@ -941,6 +941,12 @@ if (!localStorage.getItem("university_live_roster")) {
 if (localStorage.getItem("teacher_pin_registry")) {
   TEACHER_PIN_REGISTRY = JSON.parse(localStorage.getItem("teacher_pin_registry"));
 }
+// One-time migration: old format was name -> "hashstring", new format is name -> {pinHash, authorized}
+Object.keys(TEACHER_PIN_REGISTRY).forEach(name => {
+  if (typeof TEACHER_PIN_REGISTRY[name] === 'string') {
+    TEACHER_PIN_REGISTRY[name] = { pinHash: TEACHER_PIN_REGISTRY[name], authorized: true };
+  }
+});
 
 let OFFICIAL_DB     = {};
 let STUDENT_SELF_DB = {};
@@ -1127,6 +1133,13 @@ async function downloadCloudDatabaseMatrices() {
     } else {
       await setDoc(doc(db, "configurations", "teacher_pin_registry"), { registry: TEACHER_PIN_REGISTRY });
     }
+
+    // One-time migration: old format was name -> "hashstring", new format is name -> {pinHash, authorized}
+Object.keys(TEACHER_PIN_REGISTRY).forEach(name => {
+  if (typeof TEACHER_PIN_REGISTRY[name] === 'string') {
+    TEACHER_PIN_REGISTRY[name] = { pinHash: TEACHER_PIN_REGISTRY[name], authorized: true };
+  }
+});
     
     const officialDbSnap = await getDoc(doc(db, "system_matrices", "official_attendance"));
     if (officialDbSnap.exists()) {
@@ -1264,31 +1277,42 @@ async function doLogin() {
     const compiledTeacherPinHash = await createSHA256Hash(rawPin);
 
     if (!TEACHER_PIN_REGISTRY[teacherKey]) {
-      // First-time login for this teacher name — claim the PIN
-      const confirmPin = prompt(`First login for ${nameInputText}.\nRe-enter your chosen PIN to confirm:`);
-      if (!confirmPin || !/^\d{4}$/.test(confirmPin)) {
-        alert("PIN confirmation failed. Try again.");
-        return;
-      }
-      if (await createSHA256Hash(confirmPin) !== compiledTeacherPinHash) {
-        alert("PINs do not match. Login denied.");
-        return;
-      }
-      TEACHER_PIN_REGISTRY[teacherKey] = compiledTeacherPinHash;
-      await setDoc(doc(db, "configurations", "teacher_pin_registry"), { registry: TEACHER_PIN_REGISTRY });
-      localStorage.setItem("teacher_pin_registry", JSON.stringify(TEACHER_PIN_REGISTRY));
-      alert(`✅ PIN locked for ${nameInputText}! Continuing to admin password check.`);
-    } else if (TEACHER_PIN_REGISTRY[teacherKey] !== compiledTeacherPinHash) {
-      alert("✕ Access Denied: Incorrect PIN.");
-      return;
-    }
+  // First-time signup for this teacher name — claim the PIN, but stay PENDING
+  const confirmPin = prompt(`First login for ${nameInputText}.\nRe-enter your chosen PIN to confirm:`);
+  if (!confirmPin || !/^\d{4}$/.test(confirmPin)) {
+    alert("PIN confirmation failed. Try again.");
+    return;
+  }
+  if (await createSHA256Hash(confirmPin) !== compiledTeacherPinHash) {
+    alert("PINs do not match. Login denied.");
+    return;
+  }
+  TEACHER_PIN_REGISTRY[teacherKey] = { pinHash: compiledTeacherPinHash, authorized: false };
+  await setDoc(doc(db, "configurations", "teacher_pin_registry"), { registry: TEACHER_PIN_REGISTRY });
+  localStorage.setItem("teacher_pin_registry", JSON.stringify(TEACHER_PIN_REGISTRY));
+  alert(`📝 Signup submitted for ${nameInputText}!\nStatus: PENDING ADMIN APPROVAL.\nYou cannot login until Admin approves your account.`);
+  return; // ← STOP — do not log in
+}
 
-    targetedRoll     = 'FACULTY';
-    targetedReg      = 'FACULTY-REG';
-    finalDisplayName = nameInputText || "Faculty Member";
+const teacherRecord = TEACHER_PIN_REGISTRY[teacherKey];
+
+if (teacherRecord.pinHash !== compiledTeacherPinHash) {
+  alert("✕ Access Denied: Incorrect PIN.");
+  return;
+}
+
+if (teacherRecord.authorized === false) {
+  alert(`⏳ Teacher account [${nameInputText}] is pending Admin approval.\nContact your Admin.`);
+  return;
+}
+
+targetedRoll     = 'FACULTY';
+targetedReg      = 'FACULTY-REG';
+finalDisplayName = nameInputText || "Faculty Member";
   }
 
   cachedLoginPayload = { name: finalDisplayName, roll: targetedRoll, reg: targetedReg, role: selectedRole };
+
 
   if (selectedRole === 'cr' ) {
     triggerLiveGatewayHandshake();
@@ -1401,7 +1425,11 @@ async function overrideTeacherPasswordMatrix(teacherKeyName) {
     return;
   }
   const customPinHash = await createSHA256Hash(newRawPin);
-  TEACHER_PIN_REGISTRY[teacherKeyName] = customPinHash;
+  if (!TEACHER_PIN_REGISTRY[teacherKeyName]) {
+    alert("Teacher not found.");
+    return;
+  }
+  TEACHER_PIN_REGISTRY[teacherKeyName].pinHash = customPinHash;
   try {
     await setDoc(doc(db, "configurations", "teacher_pin_registry"), { registry: TEACHER_PIN_REGISTRY });
     localStorage.setItem("teacher_pin_registry", JSON.stringify(TEACHER_PIN_REGISTRY));
@@ -1538,7 +1566,7 @@ const treatAsAdmin = (role === 'cr' || role === 'teacher');
     document.getElementById('sheet-save-btn').classList.remove('hidden');
    document.getElementById('cr-authorization-card').classList.remove('hidden');
     sheetNav.classList.remove('hidden'); 
-  if(document.getElementById('cr-master-key-station-card')) document.getElementById('cr-master-key-station-card').classList.add('hidden');
+ if(document.getElementById('cr-master-key-station-card')) document.getElementById('cr-master-key-station-card').classList.add('hidden');
 
   // Only Admin (cr) gets the sidebar link to Admin Settings (password change page).
   // Teacher keeps all other admin-like powers but not this one.
@@ -1638,19 +1666,30 @@ async function processGateClearanceAction(targetRoll, approveDecision) {
 
   if(approveDecision) {
     UNIVERSITY_ROSTER[idx].authorized = true;
-    alert(`Student [Roll: ${targetRoll}] has been added to the class list.`);
   } else {
     UNIVERSITY_ROSTER.splice(idx, 1);
-    alert(`Signup request rejected and removed.`);
   }
 
-  await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
+  // Update local cache FIRST so the UI refresh below always has correct data,
+  // even if the cloud write fails or is slow.
   localStorage.setItem("university_live_roster", JSON.stringify(UNIVERSITY_ROSTER));
-  
+
+  try {
+    await setDoc(doc(db, "configurations", "university_roster"), { list: UNIVERSITY_ROSTER });
+    if (approveDecision) {
+      alert(`Student [Roll: ${targetRoll}] has been added to the class list.`);
+    } else {
+      alert(`Signup request rejected and removed.`);
+    }
+  } catch (error) {
+    console.error("Firestore Write Error: ", error);
+    alert('Saved locally, but could not sync to the cloud. Please check your connection.');
+  }
+
   buildAuthorizationApprovalQueue();
   buildStudentsTable();
   buildAttendanceTable();
-  
+
   const dashSelector = document.getElementById('dashboard-student-select');
   const trackerSelector = document.getElementById('tracker-student-select');
   if(dashSelector && trackerSelector && currentUser.role !== 'guest') {
@@ -1662,6 +1701,33 @@ async function processGateClearanceAction(targetRoll, approveDecision) {
     });
   }
 }
+
+async function processTeacherClearanceAction(teacherKeyName, approveDecision) {
+  if (!TEACHER_PIN_REGISTRY[teacherKeyName]) return;
+
+  if (approveDecision) {
+    TEACHER_PIN_REGISTRY[teacherKeyName].authorized = true;
+  } else {
+    delete TEACHER_PIN_REGISTRY[teacherKeyName];
+  }
+
+  localStorage.setItem("teacher_pin_registry", JSON.stringify(TEACHER_PIN_REGISTRY));
+
+  try {
+    await setDoc(doc(db, "configurations", "teacher_pin_registry"), { registry: TEACHER_PIN_REGISTRY });
+    if (approveDecision) {
+      alert(`Teacher [${teacherKeyName}] has been approved and can now log in.`);
+    } else {
+      alert(`Teacher signup for [${teacherKeyName}] rejected and removed.`);
+    }
+  } catch (error) {
+    console.error("Firestore Write Error: ", error);
+    alert('Saved locally, but could not sync to the cloud. Please check your connection.');
+  }
+
+  buildTeacherAccountsTable();
+}
+window.processTeacherClearanceAction = processTeacherClearanceAction;
 
 function syncDashboardDropdownChange() {
   if (currentUser.role !== 'guest') {
@@ -2414,48 +2480,84 @@ function buildStudentsTable(filter = '') {
 }
 
 function buildTeacherAccountsTable() {
-  // Only the Admin (role 'cr') gets to reset teacher PINs — render dynamically into
-  // the Class Directory page right after the student table, if any teacher accounts exist.
   let existingBox = document.getElementById('teacher-accounts-box');
   if (existingBox) existingBox.remove();
+  let existingQueueBox = document.getElementById('teacher-approval-queue-box');
+  if (existingQueueBox) existingQueueBox.remove();
 
   if (currentUser.role !== 'cr') return;
 
-  const teacherNames = Object.keys(TEACHER_PIN_REGISTRY);
-  if (teacherNames.length === 0) return;
+  const allNames     = Object.keys(TEACHER_PIN_REGISTRY);
+  const pendingNames  = allNames.filter(n => TEACHER_PIN_REGISTRY[n].authorized === false);
+  const approvedNames = allNames.filter(n => TEACHER_PIN_REGISTRY[n].authorized !== false);
 
   const studentsPage = document.getElementById('page-students');
-  const box = document.createElement('div');
-  box.id = 'teacher-accounts-box';
-  box.className = 'card';
-  box.style.borderColor = 'var(--accent2)';
-  box.style.background = 'rgba(139,92,246,0.02)';
-  box.innerHTML = `
-    <h2 style="color: var(--accent2);">👨‍🏫 Teacher Accounts</h2>
-    <p class="section-sub" style="margin-bottom: 16px;">As Admin, you can reset any teacher's login PIN below.</p>
-    <div class="table-wrap">
-      <table class="data-table">
-        <thead><tr><th>TEACHER NAME</th><th style="width:160px;">ACTIONS</th></tr></thead>
-        <tbody>
-          ${teacherNames.map(name => `
-            <tr>
-              <td style="font-weight:600;">${name}</td>
-              <td><button class="btn-action-green" style="font-size:10px; padding:4px 8px;" onclick="overrideTeacherPasswordMatrix('${name}')">⚙️ RESET PIN</button></td>
-            </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>
-  `;
-  studentsPage.appendChild(box);
+
+  // ── Pending teacher approval queue ──
+  if (pendingNames.length > 0) {
+    const queueBox = document.createElement('div');
+    queueBox.id = 'teacher-approval-queue-box';
+    queueBox.className = 'card';
+    queueBox.style.borderColor = 'var(--warn)';
+    queueBox.style.background = 'rgba(245,158,11,0.02)';
+    queueBox.innerHTML = `
+      <h2 style="color: var(--warn);">⚠️ Teacher Signups Awaiting Approval</h2>
+      <p class="section-sub" style="margin-bottom: 16px;">Review teacher signups below to grant them portal access.</p>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>TEACHER NAME</th><th style="width:200px;">ACTIONS</th></tr></thead>
+          <tbody>
+            ${pendingNames.map(name => `
+              <tr>
+                <td style="font-weight:600;">${name}</td>
+                <td>
+                  <div class="flex gap-3">
+                    <button class="btn-action-green" onclick="processTeacherClearanceAction('${name}', true)">APPROVE</button>
+                    <button class="btn-action-red" onclick="processTeacherClearanceAction('${name}', false)">REJECT</button>
+                  </div>
+                </td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+    studentsPage.appendChild(queueBox);
+  }
+
+  // ── Approved teacher accounts (PIN reset) ──
+  if (approvedNames.length > 0) {
+    const box = document.createElement('div');
+    box.id = 'teacher-accounts-box';
+    box.className = 'card';
+    box.style.borderColor = 'var(--accent2)';
+    box.style.background = 'rgba(139,92,246,0.02)';
+    box.innerHTML = `
+      <h2 style="color: var(--accent2);">👨‍🏫 Teacher Accounts</h2>
+      <p class="section-sub" style="margin-bottom: 16px;">As Admin, you can reset any teacher's login PIN below.</p>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th>TEACHER NAME</th><th style="width:160px;">ACTIONS</th></tr></thead>
+          <tbody>
+            ${approvedNames.map(name => `
+              <tr>
+                <td style="font-weight:600;">${name}</td>
+                <td><button class="btn-action-green" style="font-size:10px; padding:4px 8px;" onclick="overrideTeacherPasswordMatrix('${name}')">⚙️ RESET PIN</button></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+    studentsPage.appendChild(box);
+  }
 }
 
 function populateAdminTeacherDropdown() {
   const select = document.getElementById('admin-teacher-select');
   if (!select) return;
   select.innerHTML = '';
-  const names = Object.keys(TEACHER_PIN_REGISTRY);
+  const names = Object.keys(TEACHER_PIN_REGISTRY).filter(n => TEACHER_PIN_REGISTRY[n].authorized !== false);
   if (names.length === 0) {
-    select.innerHTML = '<option value="">No teacher accounts yet</option>';
+    select.innerHTML = '<option value="">No approved teacher accounts yet</option>';
     return;
   }
   names.forEach(name => {
