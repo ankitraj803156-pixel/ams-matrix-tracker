@@ -116,7 +116,7 @@
     line-height: 1.5;
   }
 
-  /* ── LOGIN ── */
+
   #login-screen {
     position:fixed; inset:0; z-index:100;
     display:flex; align-items:center; justify-content:center;
@@ -182,7 +182,7 @@
 
   #demo-text { text-align:center;font-size:11px;color:var(--muted);margin-bottom:20px;font-family:var(--mono); }
 
-  /* ── APP SHELL ── */
+  
   #app { display:none; position:relative; z-index:1; }
   .topbar {
     position:fixed; top:0; left:0; right:0; z-index:50;
@@ -207,7 +207,7 @@
   .nav-item:hover { background:rgba(255,255,255,0.05); }
   .nav-item.active { background:rgba(0,240,255,0.1); color:var(--accent); border:1px solid rgba(0,240,255,0.25); }
   
-  /* ── SIDEBAR FOOTER & CONTACT ── */
+  
   .sidebar-footer { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 14px; border-top: 1px dashed var(--border); text-align: center; }
   .sidebar-footer span { color: var(--accent); font-weight: bold; }
   .contact-panel-box {
@@ -223,7 +223,7 @@
   .section-title { font-size:26px; font-weight:800; margin-bottom:6px; letter-spacing:-0.5px; }
   .section-sub { color:var(--muted); font-size:14px; font-family:var(--mono); }
 
-  /* ── EMOJI STATS BOARD ── */
+
   .emoji-visual-strip {
     background: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
     border: 2px solid var(--accent);
@@ -242,12 +242,12 @@
   .emoji-node-icon { font-size: 22px; margin-bottom: 4px; }
   .emoji-node-lbl { font-size: 10px; font-family: var(--mono); color: var(--text); font-weight: 600; }
 
-  /* ── SORT SWITCH BUTTONS ── */
+  
   .sort-control-container { display: flex; align-items: center; background: var(--surface); border: 2px solid var(--border); padding: 4px; border-radius: 12px; gap: 4px; }
   .sort-toggle-btn { background: transparent; border: none; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--muted); padding: 6px 12px; border-radius: 8px; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
   .sort-toggle-btn.active { background: var(--card); border: 1px solid var(--border); color: var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 
-  /* ── STREAK BANNER ── */
+  
   .streak-banner-wrap { background: rgba(17,28,68,0.7); border: 2px solid var(--border); backdrop-filter: blur(10px); border-radius: 20px; padding: 22px 28px; margin-bottom: 24px; }
   .streak-banner-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
   .streak-banner-header h3 { font-size: 17px; font-weight: 800; }
@@ -266,7 +266,7 @@
   .streak-card-roll { font-size: 11px; color: var(--muted); font-family: var(--mono); margin-top: 2px; }
   .streak-card-days { display: flex; align-items: center; gap: 5px; font-family: var(--mono); font-weight: 800; font-size: 15px; color: #ff4500; text-shadow: 0 0 10px rgba(255,69,0,0.35); }
 
-  /* ── SUBJECT STATS 2-COL ── */
+  
   .subject-stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
   .subject-stat-mini-card { background: rgba(11,19,41,0.8); border: 2px solid var(--border); padding: 18px; border-radius: 16px; display: flex; flex-direction: column; gap: 10px; transition: all 0.25s ease; }
   .subject-stat-mini-card:hover { border-color: rgba(0,240,255,0.25); }
@@ -274,13 +274,13 @@
   .subject-stat-title { font-size: 14px; font-weight: 700; color: var(--text); max-width: 60%; line-height: 1.4; }
   .subject-stat-metrics { font-family: var(--mono); font-size: 18px; font-weight: 800; text-align: right; line-height: 1.3; }
 
-  /* ── PREDICTOR BOX ── */
+  
   .subject-prediction-box { background: rgba(3,7,18,0.5); border: 1px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 12px 14px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-family: var(--mono); }
   .sub-pred-node { display: flex; flex-direction: column; align-items: center; gap: 4px; }
   .sub-pred-value { font-size: 14px; font-weight: 800; }
   .sub-pred-label { font-size: 9px; font-weight: 700; letter-spacing: 0.8px; color: var(--muted); text-transform: uppercase; }
 
-  /* ── TRACKER ROWS ── */
+  
   .class-row-tracker { background:var(--surface); border:2px solid var(--border); padding:18px; border-radius:16px; margin-bottom:14px; transition:border .2s; position:relative; }
   .class-row-tracker:hover { border-color:var(--accent2); }
   .tracker-title { font-weight:700; font-size:15px; color:var(--text); margin-bottom:10px; }
@@ -297,19 +297,19 @@
   .inline-input-group input { width:85px; padding:8px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-family:var(--mono); text-align:center; font-size:13px; outline:none; }
   .inline-input-group input:focus { border-color:var(--accent); }
 
-  /* ── ACTION BUTTONS ── */
+  
   .btn-action-green { background: rgba(16,185,129,0.2); border: 1px solid var(--accent3); color: var(--accent3); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-family: var(--mono); font-weight: 700; transition: all 0.2s; }
   .btn-action-green:hover { background: var(--accent3); color: #fff; }
   .btn-action-red { background: rgba(239,68,68,0.2); border: 1px solid var(--danger); color: var(--danger); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 11px; font-family: var(--mono); font-weight: 700; transition: all 0.2s; }
   .btn-action-red:hover { background: var(--danger); color: #fff; }
 
-  /* ── HISTORY LOG ── */
+  
   .history-item-row { background:var(--surface); border-bottom:2px solid var(--border); padding:14px 20px; display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
   .history-date { font-family:var(--mono); font-size:14px; font-weight:700; color:var(--accent); white-space:nowrap; }
   .history-subjects-list { display:flex; flex-direction:column; gap:6px; flex:1; }
   .history-subject-tag { display:flex; justify-content:space-between; font-size:13px; background:rgba(255,255,255,0.03); padding:6px 12px; border-radius:8px; border:1px solid var(--border); }
 
-  /* ── TABLE ── */
+  
   .data-table { width:100%; border-collapse:collapse; table-layout:fixed; }
   .data-table th { text-align:left; font-size:11px; font-weight:700; letter-spacing:1.5px; color:var(--muted); padding:16px; border-bottom:2px solid var(--border); font-family:var(--mono); text-transform:uppercase; }
   .data-table td { padding:16px; font-size:14px; border-bottom:1px solid var(--border); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -324,11 +324,11 @@
   .sheet-select:focus { border-color:var(--accent); }
   .sheet-select option { background:var(--card); }
 
-  /* ── SECURITY MODAL ── */
+  
   #gateway-terminal { background:#02050c; border:2px solid var(--border); border-radius:12px; padding:16px; font-family:var(--mono); font-size:12px; color:var(--accent); margin-top:12px; text-align:left; max-height:150px; overflow-y:auto; line-height:1.5; box-shadow:inset 0 0 10px rgba(0,0,0,0.8); }
   .terminal-log { margin-bottom:6px; }
 
-  /* ── FORMS ── */
+  
   .form-group { margin-bottom:20px; }
   .form-label { font-size:11px; font-weight:700; letter-spacing:2px; color:var(--muted); margin-bottom:8px; display:block; text-transform:uppercase; }
   .form-input,.form-select { width:100%; background:var(--surface); border:2px solid var(--border); border-radius:10px; padding:12px 16px; color:var(--text); font-family:var(--font); font-size:14px; outline:none; transition:border .2s; }
@@ -349,11 +349,11 @@
   .table-wrap { overflow-x:auto; border-radius:14px; border:2px solid var(--border); background:var(--card); width:100%; }
   .highlight-row td { color:var(--accent) !important; font-weight:700; background:rgba(0,240,255,0.03); }
 
-  /* ── ROUTINE ── */
+  
   .routine-day-box { margin-bottom: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 16px; border-radius: 12px; }
   .routine-day-title { font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; font-family: var(--mono); }
 
-  /* ── MOBILE NAV TOGGLE (hidden on desktop) ── */
+  
   .mobile-nav-toggle {
     display: none;
     background: var(--surface);
@@ -389,12 +389,7 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ════════════════════════════════════════════════════════
-     RESPONSIVE / MOBILE LAYOUT
-     Pure CSS adjustments — no feature changes, no logic touched.
-     ════════════════════════════════════════════════════════ */
 
-  /* ── Tablets and small laptops ── */
   @media (max-width: 1024px) {
     .main { padding: 28px 20px; }
     .grid-2 { grid-template-columns: 1fr; gap: 16px; }
@@ -404,11 +399,11 @@
     .emoji-visual-trackers { margin-left: 0; }
   }
 
-  /* ── Phones & narrow tablets ── */
+ 
   @media (max-width: 768px) {
     body { overflow-x: hidden; }
 
-    /* Topbar becomes compact with hamburger */
+   
     .topbar {
       padding: 0 14px;
       gap: 10px;
@@ -423,7 +418,7 @@
     .topbar-user .avatar { width: 28px; height: 28px; font-size: 11px; }
     .logout-btn { padding: 6px 10px; font-size: 11px; }
 
-    /* Sidebar becomes a slide-in drawer */
+  
     .sidebar {
       top: 60px;
       left: 0;
@@ -437,7 +432,7 @@
     .sidebar.mobile-open { transform: translateX(0); }
     .sidebar-overlay.active { display: block; }
 
-    /* Main fills full width, no left margin */
+ 
     .main {
       margin-left: 0 !important;
       margin-top: 60px;
@@ -452,7 +447,7 @@
     .section-title { font-size: 20px; }
     .section-sub { font-size: 12px; }
 
-    /* Emoji strip stacks vertically */
+  
     .emoji-visual-strip { padding: 16px; flex-direction: column; align-items: flex-start; gap: 14px; width: 100%; }
     .emoji-visual-left { width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
     .emoji-visual-display { font-size: 34px; }
@@ -484,7 +479,7 @@
 
     .grid-2 { display: flex; flex-direction: column; gap: 14px; width: 100%; }
 
-    /* Page headers with flex row that overflow on mobile */
+   
     #page-attendance > div.flex.items-center.justify-between {
       flex-direction: column;
       align-items: stretch;
@@ -514,7 +509,7 @@
     }
     #page-students .search-bar { width: 100% !important; }
 
-    /* Tables: allow horizontal scroll, shrink padding/fonts */
+  
     .table-wrap { border-radius: 12px; width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
     .data-table th, .data-table td { padding: 10px 12px; font-size: 12px; }
     .data-table { min-width: 750px; table-layout: auto; width: 100%; }
@@ -530,7 +525,7 @@
     .inline-input-group { flex-wrap: wrap; gap: 8px; }
     .inline-input-group input { width: 70px; }
 
-    /* Login screen tightened for small viewports */
+   
     .login-box { width: 100%; padding: 24px 20px; border-radius: 18px; }
     .login-logo h1 { font-size: 26px; }
     .role-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -539,7 +534,7 @@
     #security-modal .login-box { width: 100%; }
   }
 
-  /* ── Very small phones ── */
+  
   @media (max-width: 420px) {
     .topbar-user span { max-width: 60px; }
     .features-grid-hub { grid-template-columns: 1fr; }
@@ -1134,12 +1129,18 @@ async function downloadCloudDatabaseMatrices() {
       await setDoc(doc(db, "configurations", "teacher_pin_registry"), { registry: TEACHER_PIN_REGISTRY });
     }
 
-    // One-time migration: old format was name -> "hashstring", new format is name -> {pinHash, authorized}
-Object.keys(TEACHER_PIN_REGISTRY).forEach(name => {
-  if (typeof TEACHER_PIN_REGISTRY[name] === 'string') {
-    TEACHER_PIN_REGISTRY[name] = { pinHash: TEACHER_PIN_REGISTRY[name], authorized: true };
-  }
-});
+    Object.keys(TEACHER_PIN_REGISTRY).forEach(name => {
+      if (typeof TEACHER_PIN_REGISTRY[name] === 'string') {
+        TEACHER_PIN_REGISTRY[name] = { pinHash: TEACHER_PIN_REGISTRY[name], authorized: true };
+      }
+    });
+
+    // ── ADD THIS: Sync Custom Routine Configuration from Cloud ──
+    const routineSnap = await getDoc(doc(db, "configurations", "universal_routine"));
+    if (routineSnap.exists()) {
+      ROTINE_CONFIG = routineSnap.data().schedule || ROTINE_CONFIG;
+      localStorage.setItem("universal_custom_routine", JSON.stringify(ROTINE_CONFIG));
+    }
     
     const officialDbSnap = await getDoc(doc(db, "system_matrices", "official_attendance"));
     if (officialDbSnap.exists()) {
@@ -1149,15 +1150,12 @@ Object.keys(TEACHER_PIN_REGISTRY).forEach(name => {
       await setDoc(doc(db, "system_matrices", "official_attendance"), OFFICIAL_DB);
     }
 
-    // ⚡ FIX: previously STUDENT_SELF_DB only ever loaded from localStorage, so
-    // self-marked attendance "vanished" on a new browser/device — even though
-    // saveDailyAttendanceState() WAS already writing it to Firestore under
-    // student_logs/{roll} all along. It just was never read back down. Pull the
-    // whole collection here so every student's self-marks are restored on load.
     await downloadAllStudentSelfLogs();
 
+    buildRoutineConfigInterface(); // Rebuild interface with cloud routine
     buildAttendanceTable();
     buildStudentsTable();
+    loadRoutineForSelectedDate();
   } catch (err) {
     console.warn("⚠️ Cloud connection failed. Using offline backup data:", err);
   }
@@ -1417,7 +1415,7 @@ async function overrideStudentPasswordMatrix(targetRoll) {
   }
 } 
 
-// Admin can also reset a Teacher's login PIN — looked up by the teacher's name.
+
 async function overrideTeacherPasswordMatrix(teacherKeyName) {
   const newRawPin = prompt(`Enter a new 4-digit PIN for teacher [${teacherKeyName}]:`);
   if (!newRawPin || newRawPin.length !== 4 || isNaN(newRawPin)) {
@@ -1441,7 +1439,7 @@ async function overrideTeacherPasswordMatrix(teacherKeyName) {
 }
 window.overrideTeacherPasswordMatrix = overrideTeacherPasswordMatrix;
 
-// Admin or Teacher can remove an already-approved student from the roster entirely.
+
 async function removeApprovedStudentFromRoster(targetRoll) {
   const idx = UNIVERSITY_ROSTER.findIndex(s => s.roll === targetRoll);
   if (idx === -1) { alert("Student not found."); return; }
@@ -1519,9 +1517,7 @@ window.executeStudentSelfPinChange = executeStudentSelfPinChange;
 window.overrideStudentPasswordMatrix = overrideStudentPasswordMatrix;
 
 async function proceedWithLogin(name, roll, reg, role) {
-  // ⚡ FIX: re-sync self-marked attendance from the cloud right at login too —
-  // not just on initial page load — so switching devices/browsers shows the
-  // latest self-marks immediately instead of starting from an empty local cache.
+
   await downloadAllStudentSelfLogs();
 
   const parts = name.trim().split(' ');
@@ -1540,7 +1536,7 @@ async function proceedWithLogin(name, roll, reg, role) {
   document.getElementById('user-avatar').textContent = initials;
   const roleLabel = role === 'cr' ? 'ADMIN' : role.toUpperCase();
   document.getElementById('topbar-role').textContent = role === 'guest' ? `GUEST (${currentUser.guestPersona === 'cr' ? 'TEACHER/CR' : currentUser.guestPersona.toUpperCase()})` : roleLabel;
-   // ADD THESE — local date in YYYY-MM-DD format (correct in IST)
+  
 const today = new Date();
 const localDate = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
 document.getElementById('tracker-target-date').value = localDate;
@@ -1555,7 +1551,7 @@ document.getElementById('bulk-cancel-date').value    = localDate;
   const sheetNav        = document.getElementById('sidebar-nav-sheet');
   if(dashSelector && trackerSelector) { dashSelector.innerHTML = ''; trackerSelector.innerHTML = ''; }
 
- // Strictly restrict admin capability handles to authenticated rows only
+
 const treatAsAdmin = (role === 'cr' || role === 'teacher');
   const sortedAuthorizedStudents = getSortedApprovedStudentsList();
 
@@ -1568,8 +1564,7 @@ const treatAsAdmin = (role === 'cr' || role === 'teacher');
     sheetNav.classList.remove('hidden'); 
  if(document.getElementById('cr-master-key-station-card')) document.getElementById('cr-master-key-station-card').classList.add('hidden');
 
-  // Only Admin (cr) gets the sidebar link to Admin Settings (password change page).
-  // Teacher keeps all other admin-like powers but not this one.
+
   if (role === 'cr') {
     document.getElementById('sidebar-nav-admin-settings').classList.remove('hidden');
   } else {
@@ -1905,13 +1900,22 @@ function buildRoutineConfigInterface() {
   }
 }
 
-function saveCustomRoutineSchedule() {
+async function saveCustomRoutineSchedule() {
   for(let i=1; i<=6; i++) {
     const rawVal = document.getElementById(`routine-day-input-${i}`).value;
     ROTINE_CONFIG[i] = rawVal.split(',').map(item => item.trim()).filter(item => item.length > 0);
   }
   localStorage.setItem("universal_custom_routine", JSON.stringify(ROTINE_CONFIG));
-  alert('Routine saved successfully!');
+  
+  // ── ADD THIS: Upload routine to Firebase cloud database ──
+  try {
+    await setDoc(doc(db, "configurations", "universal_routine"), { schedule: ROTINE_CONFIG });
+    alert('Routine saved to Cloud and Local storage successfully!');
+  } catch (error) {
+    console.error("Firestore Routine Write Error: ", error);
+    alert('Saved locally, but failed to sync to cloud database.');
+  }
+  
   loadRoutineForSelectedDate();
   renderDynamicSubjectStats();
   buildAttendanceTable();
@@ -2073,9 +2077,9 @@ function executeGuestOverride(subName, idx) {
   renderDynamicSubjectStats();
 }
 
-function executeLastPossibleDateOverride(roll, subject, idx) {
+async function executeLastPossibleDateOverride(roll, subject, idx) {
   const reqCond = parseInt(document.getElementById(`input-cond-${idx}`).value) || 0;
-  const reqAtt  = parseInt(document.getElementById(`input-att-${idx}`).value)  || 0;
+  const reqAtt  = parseInt(document.getElementById(`input-att-${idx}`).value)   || 0;
   if (reqAtt > reqCond) { alert('Attended cannot exceed Conducted.'); return; }
   
   if (!OFFICIAL_DB[roll]) OFFICIAL_DB[roll] = {};
@@ -2114,7 +2118,16 @@ function executeLastPossibleDateOverride(roll, subject, idx) {
   }
   
   localStorage.setItem("iot25_official_db", JSON.stringify(OFFICIAL_DB));
-  alert('Changes saved successfully!');
+
+  // ── FIX: Ensure manual corrections are uploaded instantly ──
+  try {
+    const sanitizedOfficial = JSON.parse(JSON.stringify(OFFICIAL_DB));
+    await setDoc(doc(db, "system_matrices", "official_attendance"), sanitizedOfficial);
+    alert('Cloud matrices modified successfully!');
+  } catch (error) {
+    console.error("Firestore Write Error: ", error);
+    alert('Saved locally, but failed to sync online.');
+  }
   
   renderDynamicSubjectStats(); 
   buildAttendanceTable(); 
@@ -2202,20 +2215,19 @@ async function saveDailyAttendanceState() {
   
   localStorage.setItem(storageKey, JSON.stringify(activeDB));
 
-  // 🔥 THE FIX: Sanitize the object reference matrix before uploading to Firebase
+  // ── FIX: Force upload clean JSON records to Firebase cloud ──
   try {
     if (currentUser.role === 'cr' || currentUser.role === 'teacher') {
       const sanitizedOfficial = JSON.parse(JSON.stringify(OFFICIAL_DB));
       await setDoc(doc(db, "system_matrices", "official_attendance"), sanitizedOfficial);
     } else {
-      // Clean target reference node for student self log entries explicitly
       const sanitizedSelfLog = JSON.parse(JSON.stringify(STUDENT_SELF_DB[roll] || {}));
       await setDoc(doc(db, "student_logs", roll), sanitizedSelfLog);
     }
-    alert('Attendance saved successfully!');
+    alert('Attendance synced to cloud successfully!');
   } catch (error) {
     console.error("Firestore Write Error: ", error);
-    alert('Could not save to the cloud. Please try again.');
+    alert('Saved locally, but failed to upload to cloud server.');
   }
 
   renderDynamicSubjectStats(); 
@@ -2223,6 +2235,7 @@ async function saveDailyAttendanceState() {
   buildHistoryTrackerLogsList(); 
   runCreativeShortageMonitorLogs();
 }
+
 function buildHistoryTrackerLogsList() {
   const roll = getTargetRoll();
   const container = document.getElementById('tracker-history-log-container');
@@ -2392,7 +2405,7 @@ async function saveInlineSheetAttendanceState() {
   renderDynamicSubjectStats(); buildAttendanceTable(); runCreativeShortageMonitorLogs();
 }
 
-function executeBulkDayCancellation() {
+async function executeBulkDayCancellation() {
   if (currentUser.role === 'guest') return;
   const targetDate = document.getElementById('bulk-cancel-date').value;
   if (!targetDate) { alert('Please choose a date.'); return; }
@@ -2403,7 +2416,16 @@ function executeBulkDayCancellation() {
   if (!OFFICIAL_DB[roll][targetDate]) OFFICIAL_DB[roll][targetDate] = {};
   planned.forEach(sub => { OFFICIAL_DB[roll][targetDate][sub] = "Cancelled"; });
   localStorage.setItem("iot25_official_db", JSON.stringify(OFFICIAL_DB));
-  alert(`Classes cancelled for ${targetDate}`);
+
+  try {
+    const sanitizedOfficial = JSON.parse(JSON.stringify(OFFICIAL_DB));
+    await setDoc(doc(db, "system_matrices", "official_attendance"), sanitizedOfficial);
+    alert(`Classes cancelled for ${targetDate}`);
+  } catch (error) {
+    console.error("Firestore Write Error: ", error);
+    alert('Saved locally, but could not sync to the cloud. Please check your connection.');
+  }
+
   renderDynamicSubjectStats(); buildAttendanceTable(); loadRoutineForSelectedDate();
 }
 
@@ -2450,14 +2472,14 @@ function buildStudentsTable(filter = '') {
     let managementActionHtml = `<span style="color:var(--muted); font-size:12px; font-family:var(--mono);">Locked</span>`;
     
     if (isAdminSession && s.roll !== 'GUEST-NODE') {
-      // Admin or Teacher can override ANY student's PIN, and can remove them from the roster
+      
       managementActionHtml = `
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
           <button class="btn-action-green" style="font-size:10px; padding:4px 8px;" onclick="overrideStudentPasswordMatrix('${s.roll}')">⚙️ RESET PIN</button>
           <button class="btn-action-red" style="font-size:10px; padding:4px 8px;" onclick="removeApprovedStudentFromRoster('${s.roll}')">🗑️ REMOVE</button>
         </div>`;
     } else if (s.roll === currentUser.roll && s.roll !== 'GUEST-NODE') {
-      // Regular student can change ONLY their own personal login PIN
+      
       managementActionHtml = `<button class="btn-action-green" style="font-size:10px; padding:4px 8px; background:rgba(0,240,255,0.2); border-color:var(--accent); color:var(--accent);" onclick="executeStudentSelfPinChange()">🔒 CHANGE PIN</button>`;
     }
 
@@ -2475,7 +2497,7 @@ function buildStudentsTable(filter = '') {
     idx++;
   });
 
-  // Admin gets an extra panel to reset Teacher passwords, listed by name.
+  
   buildTeacherAccountsTable();
 }
 
